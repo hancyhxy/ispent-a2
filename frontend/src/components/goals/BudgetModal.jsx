@@ -20,7 +20,6 @@ export default function BudgetModal({ isOpen, onClose, budget, onSave, onDelete,
         setAmount('');
       }
       setErrors({});
-      setTimeout(() => amountRef.current?.focus(), 100);
     }
   }, [isOpen, budget]);
 
@@ -49,7 +48,31 @@ export default function BudgetModal({ isOpen, onClose, budget, onSave, onDelete,
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title={isEdit ? 'Edit Budget' : 'Add Budget'}>
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title={isEdit ? 'Edit Budget' : 'Add Budget'}
+      footer={
+        <div className="flex flex-row gap-2 md:justify-end">
+          {isEdit && (
+            <button
+              onClick={onDelete}
+              className="flex-1 md:flex-none py-3 md:px-6 rounded-2xl text-sm font-semibold
+                text-error hover:text-red-700 transition-colors"
+            >
+              Delete this budget
+            </button>
+          )}
+          <button
+            onClick={handleSave}
+            className="flex-1 md:flex-none py-3 md:px-8 rounded-2xl bg-primary hover:bg-primary-light
+              text-white text-sm font-semibold transition-colors"
+          >
+            Save
+          </button>
+        </div>
+      }
+    >
       {/* Month (read-only) */}
       <div className="mb-5">
         <label className="text-xs font-medium text-text-muted mb-1 block">Month</label>
@@ -94,7 +117,7 @@ export default function BudgetModal({ isOpen, onClose, budget, onSave, onDelete,
       )}
 
       {/* Amount */}
-      <div className="mb-6">
+      <div>
         <label className="text-xs font-medium text-text-muted mb-2 block">Budget Amount</label>
         <div className="relative">
           <span className="absolute left-4 top-1/2 -translate-y-1/2 text-text-muted font-medium">$</span>
@@ -110,26 +133,6 @@ export default function BudgetModal({ isOpen, onClose, budget, onSave, onDelete,
           />
         </div>
         {errors.amount && <p className="text-xs text-error mt-1">{errors.amount}</p>}
-      </div>
-
-      {/* Actions */}
-      <div className="flex flex-col gap-2">
-        <button
-          onClick={handleSave}
-          className="w-full py-3 rounded-2xl bg-primary hover:bg-primary-light text-white
-            text-sm font-semibold transition-colors"
-        >
-          Save
-        </button>
-
-        {isEdit && (
-          <button
-            onClick={onDelete}
-            className="w-full py-3 text-sm font-semibold text-error hover:text-red-700 transition-colors"
-          >
-            Delete this budget
-          </button>
-        )}
       </div>
     </Modal>
   );
