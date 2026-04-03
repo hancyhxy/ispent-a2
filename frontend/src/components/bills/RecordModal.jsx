@@ -131,7 +131,7 @@ export default function RecordModal({ isOpen, onClose, record, onSave, onSaveAnd
             <button
               key={cat.key}
               onClick={() => setCategory(cat.key)}
-              className={`flex flex-col items-center gap-1 py-3 rounded-xl transition-colors
+              className={`flex flex-col items-center gap-1 py-3 rounded-xl transition-colors focus:outline-none
                 ${category === cat.key
                   ? 'bg-primary/10 ring-2 ring-primary'
                   : 'bg-surface hover:bg-gray-100'}`}

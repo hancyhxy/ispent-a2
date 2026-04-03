@@ -99,7 +99,7 @@ export default function BudgetModal({ isOpen, onClose, budget, onSave, onDelete,
                   key={cat.key}
                   onClick={() => !isUsed && setCategory(cat.key)}
                   disabled={isUsed}
-                  className={`flex flex-col items-center gap-1 py-3 rounded-xl transition-colors
+                  className={`flex flex-col items-center gap-1 py-3 rounded-xl transition-colors focus:outline-none
                     ${isUsed
                       ? 'opacity-30 cursor-not-allowed bg-surface'
                       : category === cat.key
