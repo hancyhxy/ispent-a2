@@ -26,7 +26,7 @@ export default function QuickNoteManager({ isOpen, onClose, category, tags, onAd
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Manage Quick Notes">
+    <Modal isOpen={isOpen} onClose={onClose} title="Manage Tags">
       {/* Existing tags */}
       <div className="flex flex-wrap gap-2 mb-6 min-h-[48px]">
         {tags.length === 0 && (
