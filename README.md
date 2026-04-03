@@ -33,8 +33,35 @@ International students and young professionals juggle diverse spending categorie
 
 ## Folder Structure
 
-[TODO: Fill in after development is complete]
+```
+frontend/
+├── src/
+│   ├── components/
+│   │   ├── layout/          # Sidebar, Header, BottomTabBar
+│   │   ├── bills/           # BillsPage, RecordList, RecordItem, RecordModal
+│   │   ├── analysis/        # AnalysisPage, OverviewCards, DonutChart, BarChart, CategoryRanking
+│   │   ├── goals/           # GoalsPage, BudgetList, BudgetCard, BudgetModal
+│   │   └── shared/          # Modal, Toast, ConfirmDialog, MonthPicker, EmptyState
+│   ├── hooks/               # useRecords, useBudgets, useStats
+│   ├── services/            # api.js — unified fetch wrapper
+│   ├── utils/               # formatCurrency, formatDate, getGreeting
+│   └── constants/           # categories, chart colors
+├── index.html
+└── vite.config.js
+
+backend/
+├── server.js                # Express entry, CORS, JSON parser
+├── db.js                    # MongoDB connection
+├── routes/
+│   ├── records.js           # /api/records CRUD
+│   ├── budgets.js           # /api/budgets CRUD + spent aggregation
+│   └── stats.js             # /api/stats/* read-only analytics
+├── models/
+│   ├── Record.js            # Mongoose schema
+│   └── Budget.js            # Mongoose schema with compound unique index
+└── seed.js                  # Sample data for demo
+```
 
 ## Challenges Overcome
 
-[TODO: Fill in after development is complete — 4-5 sentences describing key technical challenges and how they were solved]
+Building a cohesive SPA without React Router required managing page state and shared month-picker context at the App level, ensuring all child pages re-fetch data when the month changes. The budget progress feature was challenging because spent amounts are not stored — they are calculated in real time by aggregating expense records from MongoDB, which required designing an efficient aggregation pipeline that joins data across the Records and Budgets collections. Implementing the responsive layout with three breakpoints (mobile bottom tab bar, tablet icon-only sidebar, desktop full sidebar) using Tailwind CSS utility classes demanded careful conditional styling without CSS duplication. The modal system needed to work as both a centered overlay on desktop and a bottom sheet on mobile, while maintaining focus trapping and keyboard accessibility across both modes.
