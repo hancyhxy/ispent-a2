@@ -1,60 +1,60 @@
-# Money Tracker — Feature Specification
+# iSpent — Feature Specification
 
-> 三个页面的完整功能定义，包含所有 CRUD 状态、交互流程和边界情况。
+> Complete feature definitions for all three pages, covering every CRUD state, interaction flow, and edge case.
 
 ---
 
-## 1. Bills（账单）
+## 1. Bills
 
-### 1.1 顶部汇总区
+### 1.1 Top Summary Area
 
-- 当月支出总额（display 字号，decline 色 `#EF4444`）
-- 当月收入总额（display 字号，growth 色 `#10B981`）
-- 数据随全局月份选择器联动
+- Monthly total expense (display size, decline color `#EF4444`)
+- Monthly total income (display size, growth color `#10B981`)
+- Data syncs with the global month picker
 
-### 1.2 记录列表
+### 1.2 Record List
 
-#### 分组规则
+#### Grouping Rules
 
-- 按日期分组，倒序排列（最新在上）
-- 每组标题：日期 + 当日支出小计 + 当日收入小计
+- Grouped by date, reverse chronological (newest first)
+- Group header: date + daily expense subtotal + daily income subtotal
 
-#### 单条记录展示
+#### Single Record Display
 
-- 左侧：分类图标（emoji）
-- 中间：分类名 + 备注（备注用 `text_muted`）
-- 右侧：金额（支出 decline 色带 `-` 号，收入 growth 色带 `+` 号）
+- Left: category icon (emoji)
+- Center: category name + note (note in `text_muted`)
+- Right: amount (expense in decline color with `-`, income in growth color with `+`)
 
-#### 空状态
+#### Empty State
 
-- 无记录时显示引导文案："No records yet. Tap + to add your first one."
+- When no records: "No records yet. Tap + to add your first one."
 
-#### 记录交互
+#### Record Interaction
 
-- 点击某条 → 弹出编辑 Modal（见 1.4）
-- 无左滑删除，删除统一在编辑 Modal 内
+- Tap a record → open Edit Modal (see 1.4)
+- No swipe-to-delete; deletion is handled inside the Edit Modal
 
-### 1.3 新建记录（Create）
+### 1.3 Create Record (Create)
 
-**入口**：页面右上角「+ Add Record」按钮
+**Entry point**: "+ Add Record" button at the top-right of the page
 
-弹出 Modal，包含以下模块：
+Opens a Modal with the following sections:
 
-#### 1.3.1 类型选择
+#### 1.3.1 Type Selection
 
-- Expense / Income 两个 Tab
-- 默认选中 Expense
-- 切换时下方分类图标跟着变
+- Expense / Income tabs
+- Defaults to Expense
+- Switching tabs updates the category grid below
 
-#### 1.3.2 分类选择
+#### 1.3.2 Category Selection
 
-- 图标网格布局（3-4 列）
-- 点选后高亮（primary 色背景 10% + primary 色图标边框）
-- 必选，未选时不可保存
+- Icon grid layout (3–4 columns)
+- Selected state: highlighted (primary color 10% background + primary color icon border)
+- Required — cannot save without selecting
 
-**支出分类（9 个）**：
+**Expense categories (9)**:
 
-| 图标 | Key | 名称 |
+| Icon | Key | Name |
 |------|-----|------|
 | 🍕 | food | Food |
 | 🛒 | shopping | Shopping |
@@ -66,9 +66,9 @@
 | 🧴 | daily | Daily |
 | 💡 | other | Other |
 
-**收入分类（5 个）**：
+**Income categories (5)**:
 
-| 图标 | Key | 名称 |
+| Icon | Key | Name |
 |------|-----|------|
 | 💰 | salary | Salary |
 | 💼 | freelance | Freelance |
@@ -76,112 +76,112 @@
 | 🔙 | refund | Refund |
 | 💡 | other | Other |
 
-#### 1.3.3 金额输入
+#### 1.3.3 Amount Input
 
-- Modal 打开后自动聚焦（useRef）
-- 数字输入，支持小数点（最多 2 位）
-- 必填，为 0 或空时不可保存
-- 前缀显示 `$` 符号
+- Auto-focus on Modal open (useRef)
+- Numeric input, supports decimals (up to 2 places)
+- Required — cannot save if 0 or empty
+- Prefix: `$` symbol
 
-#### 1.3.4 备注输入
+#### 1.3.4 Note Input
 
-- 单行文本框，placeholder: "Add a note..."
-- 可选，可留空
-- 快捷备注标签：
-  - 预设标签：lunch / dinner / grocery / daily / transport
-  - 点击标签 → 自动填入备注框
-  - 手动输入会覆盖标签内容
+- Single-line text field, placeholder: "Add a note..."
+- Optional, can be left blank
+- Quick-note tags:
+  - Presets: lunch / dinner / grocery / daily / transport
+  - Tap a tag → auto-fills the note field
+  - Manual input overrides the tag content
 
-#### 1.3.5 日期选择
+#### 1.3.5 Date Picker
 
-- 默认今天
-- 点击弹出日期选择器（日历组件）
-- 可选过去日期，不可选未来日期
+- Defaults to today
+- Tap to open a calendar date picker
+- Past dates allowed, future dates disabled
 
-#### 1.3.6 保存操作
+#### 1.3.6 Save Actions
 
-**「Save」按钮**：
-- 校验通过 → `POST /api/records`
-- 成功 → Toast "Record added" + 关闭 Modal + 列表刷新
-- 失败 → Toast "Failed to save"（error 色）
+**"Save" button**:
+- Validation passes → `POST /api/records`
+- Success → Toast "Record added" + close Modal + refresh list
+- Failure → Toast "Failed to save" (error color)
 
-**「Save & Add Another」按钮**：
-- 保存成功后不关闭 Modal
-- 清空金额和备注，保留类型和分类选择
-- Toast "Record added" + 光标回到金额输入框
+**"Save & Add Another" button**:
+- On success, keeps the Modal open
+- Clears amount and note, retains type and category selection
+- Toast "Record added" + cursor returns to amount input
 
-**关闭/取消**：
-- 点击遮罩关闭
-- 有未保存内容 → 无需确认，直接关闭（降低摩擦）
-- Modal 关闭动画：淡出
+**Close / Cancel**:
+- Tap overlay to close
+- Unsaved content → no confirmation needed, close immediately (reduce friction)
+- Modal close animation: fade out
 
-#### 1.3.7 表单校验规则
+#### 1.3.7 Validation Rules
 
-| 字段 | 规则 | 错误提示 |
-|------|------|---------|
-| 分类 | 必选 | "Please select a category" |
-| 金额 | 必填 & > 0 | "Please enter a valid amount" |
-| 备注 | 可选 | — |
-| 日期 | 必填，默认今天，不可选未来 | — |
+| Field | Rule | Error Message |
+|-------|------|---------------|
+| Category | Required | "Please select a category" |
+| Amount | Required & > 0 | "Please enter a valid amount" |
+| Note | Optional | — |
+| Date | Required, defaults to today, no future dates | — |
 
-### 1.4 编辑记录（Update）
+### 1.4 Edit Record (Update)
 
-**入口**：点击列表中任一记录
+**Entry point**: Tap any record in the list
 
-弹出编辑 Modal（复用新建 Modal 结构）：
-- 所有字段预填充当前记录数据
-- 类型（Expense/Income）可切换
-- 分类可重新选择
-- 金额可修改
-- 备注可修改
-- 日期可修改
+Opens an Edit Modal (reuses the Create Modal structure):
+- All fields pre-filled with the current record data
+- Type (Expense/Income) can be switched
+- Category can be reselected
+- Amount can be modified
+- Note can be modified
+- Date can be modified
 
-**保存**：
-- 「Save」→ `PUT /api/records/:id`
-- 成功 → Toast "Record updated" + 关闭 + 列表刷新
-- 失败 → Toast "Failed to update"
+**Save**:
+- "Save" → `PUT /api/records/:id`
+- Success → Toast "Record updated" + close + refresh list
+- Failure → Toast "Failed to update"
 
-**注意**：编辑 Modal 没有「Save & Add Another」按钮
+**Note**: Edit Modal does not have a "Save & Add Another" button
 
-**删除入口**：在编辑 Modal 内（见 1.5）
+**Delete entry point**: Inside the Edit Modal (see 1.5)
 
-### 1.5 删除记录（Delete）
+### 1.5 Delete Record (Delete)
 
-**入口**：编辑 Modal 底部的「Delete」按钮（error 色文字）
+**Entry point**: "Delete" button at the bottom of the Edit Modal (error color text)
 
-**二次确认弹窗**：
-- 标题："Delete this record?"
-- 内容：显示将要删除的记录摘要（分类 + 金额 + 日期）
-- 「Cancel」→ 关闭确认弹窗，回到编辑 Modal
-- 「Delete」→ `DELETE /api/records/:id`
+**Confirmation dialog**:
+- Title: "Delete this record?"
+- Content: shows a summary of the record to be deleted (category + amount + date)
+- "Cancel" → closes the dialog, returns to Edit Modal
+- "Delete" → `DELETE /api/records/:id`
 
-**结果**：
-- 成功 → Toast "Record deleted" + 关闭编辑 Modal + 列表刷新
-- 失败 → Toast "Failed to delete"
+**Result**:
+- Success → Toast "Record deleted" + close Edit Modal + refresh list
+- Failure → Toast "Failed to delete"
 
-### 1.6 数据查询（Read）
+### 1.6 Data Query (Read)
 
-**页面加载时**：
-- `GET /api/records?month=当前月份`
+**On page load**:
+- `GET /api/records?month=current_month`
 
-**月份切换时**：
-- `GET /api/records?month=选中月份` → 列表和汇总同时刷新
+**On month change**:
+- `GET /api/records?month=selected_month` → list and summary refresh simultaneously
 
-**前端数据处理**：
-- 按日期分组
-- 计算顶部汇总（支出总额、收入总额）
-- 按日期倒序排列
+**Frontend data processing**:
+- Group by date
+- Calculate top summary (total expense, total income)
+- Sort by date descending
 
-### 1.7 API 接口
+### 1.7 API Endpoints
 
-| 操作 | 方法 | 端点 |
-|------|------|------|
-| 创建记录 | POST | `/api/records` |
-| 查询列表 | GET | `/api/records?month=2026-04` |
-| 修改记录 | PUT | `/api/records/:id` |
-| 删除记录 | DELETE | `/api/records/:id` |
+| Operation | Method | Endpoint |
+|-----------|--------|----------|
+| Create record | POST | `/api/records` |
+| Query list | GET | `/api/records?month=2026-04` |
+| Update record | PUT | `/api/records/:id` |
+| Delete record | DELETE | `/api/records/:id` |
 
-### 1.8 数据模型
+### 1.8 Data Model
 
 ```json
 {
@@ -189,7 +189,7 @@
   "type": "expense | income",
   "category": "food",
   "amount": 15.00,
-  "note": "学校食堂",
+  "note": "Campus cafeteria",
   "date": "2026-04-03",
   "createdAt": "2026-04-03T17:44:00Z"
 }
@@ -197,247 +197,247 @@
 
 ---
 
-## 2. Analysis（分析）
+## 2. Analysis
 
-> 纯展示页面，无 CRUD 操作入口。
+> Display-only page — no CRUD entry points.
 
-### 2.1 月度概览卡片区
+### 2.1 Monthly Overview Cards
 
-4 个卡片横向排列：
+4 cards in a horizontal row:
 
-#### 2.1.1 支出总额
+#### 2.1.1 Total Expense
 
-- 标题："Total Expense"（caption, `text_muted`）
-- 金额：display 字号，decline 色
-- 数据：当月所有 type=expense 记录 `sum(amount)`
+- Label: "Total Expense" (caption, `text_muted`)
+- Amount: display size, decline color
+- Data: `sum(amount)` of all type=expense records for the current month
 
-#### 2.1.2 收入总额
+#### 2.1.2 Total Income
 
-- 标题："Total Income"
-- 金额：display 字号，growth 色
-- 数据：当月所有 type=income 记录 `sum(amount)`
+- Label: "Total Income"
+- Amount: display size, growth color
+- Data: `sum(amount)` of all type=income records for the current month
 
-#### 2.1.3 结余
+#### 2.1.3 Balance
 
-- 标题："Balance"
-- 金额：display 字号
-- 正数 → growth 色，负数 → decline 色
-- 计算：收入总额 - 支出总额
+- Label: "Balance"
+- Amount: display size
+- Positive → growth color, negative → decline color
+- Calculation: total income − total expense
 
-#### 2.1.4 记账笔数
+#### 2.1.4 Record Count
 
-- 标题："Records"
-- 数值：display 字号，`text_primary` 色
-- 数据：当月所有记录 count
+- Label: "Records"
+- Value: display size, `text_primary` color
+- Data: count of all records for the current month
 
-### 2.2 分类占比（Category Breakdown）
+### 2.2 Category Breakdown
 
-#### 2.2.1 切换 Tab
+#### 2.2.1 Toggle Tabs
 
-- Expense / Income 切换
-- 默认展示 Expense
-- 切换后环形图和排行列表同时更新
+- Expense / Income toggle
+- Defaults to Expense
+- Switching updates both the donut chart and the ranking list
 
-#### 2.2.2 环形图（Donut Chart）
+#### 2.2.2 Donut Chart
 
-- 宽描边（32px+），保持透气感
-- 中间显示总金额（如 "$2,408"）
-- 每个分类一个色段（从预定义色板中分配）
-- hover 时高亮该色段 + 显示 tooltip（分类名 + 金额 + 百分比）
-- 右侧图例：色块 + 分类名，纵向排列
-- 无数据时：灰色空环 + "No expense data"
+- Wide stroke (32px+) to maintain breathing room
+- Center displays total amount (e.g., "$2,408")
+- Each category gets one color segment (assigned from a predefined palette)
+- Hover highlights the segment + shows tooltip (category name + amount + percentage)
+- Right-side legend: color swatch + category name, stacked vertically
+- No data: gray empty ring + "No expense data"
 
-#### 2.2.3 分类排行列表
+#### 2.2.3 Category Ranking List
 
-- 紧跟在环形图下方
-- 按金额降序排列
-- 每行：分类图标 + 分类名 + 百分比 + 金额
-- 百分比用 `text_muted`，金额用 `text_primary`
-- 金额为 0 的分类不显示
+- Positioned directly below the donut chart
+- Sorted by amount descending
+- Each row: category icon + category name + percentage + amount
+- Percentage in `text_muted`, amount in `text_primary`
+- Categories with 0 amount are hidden
 
-### 2.3 支出趋势（Expense Trend）
+### 2.3 Expense Trend
 
-#### 2.3.1 图表类型
+#### 2.3.1 Chart Type
 
-- 柱状图（Bar Chart），圆角端点
+- Bar chart with rounded endpoints
 
-#### 2.3.2 数据维度
+#### 2.3.2 Data Dimensions
 
-- X 轴：当月每一天（1, 2, 3 ... 30）
-- Y 轴：金额
-- 每根柱子 = 当天支出总额
-- 无支出的天数柱子高度为 0（不隐藏）
+- X-axis: each day of the current month (1, 2, 3 ... 30)
+- Y-axis: amount
+- Each bar = total expense for that day
+- Days with no expense have a 0-height bar (not hidden)
 
-#### 2.3.3 平均线
+#### 2.3.3 Average Line
 
-- 水平虚线，标注 "Avg: $XX"
-- 计算：当月支出总额 / 当月已过天数
+- Horizontal dashed line, labeled "Avg: $XX"
+- Calculation: monthly total expense / number of elapsed days
 
-#### 2.3.4 交互
+#### 2.3.4 Interaction
 
-- hover 柱子 → tooltip 显示日期 + 当日金额
-- 无数据月份 → 空图表 + "No data for this month"
+- Hover a bar → tooltip shows date + daily amount
+- Empty month → empty chart + "No data for this month"
 
-#### 2.3.5 图表样式
+#### 2.3.5 Chart Styling
 
-- 柱子颜色：primary 色
-- 平均线：warning 色虚线
-- 轴标签：caption 字号，`text_muted` 色
+- Bar color: primary
+- Average line: warning color, dashed
+- Axis labels: caption size, `text_muted` color
 
-### 2.4 收支对比（Income vs Expense）— 可选
+### 2.4 Income vs Expense — Optional
 
-> 时间允许时做，非核心功能。
+> Build if time permits; not a core feature.
 
-- 图表类型：分组柱状图
-- X 轴：近 6 个月月份名
-- 每月两根柱子：Expense（decline 色）+ Income（growth 色）
-- hover → tooltip 显示月份 + 两个金额
-- 图例：Expense / Income
+- Chart type: grouped bar chart
+- X-axis: last 6 months by name
+- Two bars per month: Expense (decline color) + Income (growth color)
+- Hover → tooltip shows month + both amounts
+- Legend: Expense / Income
 
-### 2.5 数据查询
+### 2.5 Data Queries
 
-**页面加载时**：
-- `GET /api/stats/monthly?month=当前月份` → 概览卡片
-- `GET /api/stats/categories?month=当前月份&type=expense` → 分类占比
-- `GET /api/stats/daily?month=当前月份` → 支出趋势
+**On page load**:
+- `GET /api/stats/monthly?month=current_month` → overview cards
+- `GET /api/stats/categories?month=current_month&type=expense` → category breakdown
+- `GET /api/stats/daily?month=current_month` → expense trend
 
-**月份切换时**：
-- 以上接口全部重新请求
+**On month change**:
+- All above endpoints re-fetched
 
-**Expense/Income Tab 切换时**：
-- `GET /api/stats/categories?month=当前月份&type=切换后的类型`
+**On Expense/Income tab switch**:
+- `GET /api/stats/categories?month=current_month&type=switched_type`
 
-**收支对比（如果做）**：
+**Income vs Expense (if built)**:
 - `GET /api/stats/trend?months=6`
 
-### 2.6 API 接口
+### 2.6 API Endpoints
 
-| 用途 | 方法 | 端点 |
-|------|------|------|
-| 月度汇总 | GET | `/api/stats/monthly?month=2026-04` |
-| 分类统计 | GET | `/api/stats/categories?month=2026-04&type=expense` |
-| 每日趋势 | GET | `/api/stats/daily?month=2026-04` |
-| 跨月对比 | GET | `/api/stats/trend?months=6` |
+| Purpose | Method | Endpoint |
+|---------|--------|----------|
+| Monthly summary | GET | `/api/stats/monthly?month=2026-04` |
+| Category stats | GET | `/api/stats/categories?month=2026-04&type=expense` |
+| Daily trend | GET | `/api/stats/daily?month=2026-04` |
+| Cross-month comparison | GET | `/api/stats/trend?months=6` |
 
 ---
 
-## 3. Goals（预算目标）
+## 3. Goals (Budget)
 
-### 3.1 预算列表
+### 3.1 Budget List
 
-#### 3.1.1 卡片展示
+#### 3.1.1 Card Display
 
-每个分类预算一张卡片：
-- 左侧：分类图标（emoji）+ 分类名
-- 右侧：已花金额 / 预算金额（如 "$320 / $500"）+ 百分比
-- 下方：进度条
+One card per category budget:
+- Left: category icon (emoji) + category name
+- Right: spent amount / budget amount (e.g., "$320 / $500") + percentage
+- Below: progress bar
 
-#### 3.1.2 进度条颜色逻辑
+#### 3.1.2 Progress Bar Color Logic
 
-| 百分比 | 颜色 | 状态 |
-|--------|------|------|
-| < 70% | success `#22C55E` | 安全 |
-| 70% - 100% | warning `#F97316` | 警告 |
-| > 100% | error `#DC2626` | 超支，进度条溢出部分用更深 error 色 |
+| Percentage | Color | Status |
+|------------|-------|--------|
+| < 70% | success `#22C55E` | Safe |
+| 70% – 100% | warning `#F97316` | Warning |
+| > 100% | error `#DC2626` | Overspent — overflow portion uses a deeper error shade |
 
-#### 3.1.3 已花金额计算
+#### 3.1.3 Spent Amount Calculation
 
-- 从 records 表聚合：当月 + 该分类 + type=expense 的 `sum(amount)`
-- 不存储，实时计算
+- Aggregated from records: current month + matching category + type=expense → `sum(amount)`
+- Not stored — calculated in real time
 
-#### 3.1.4 排序规则
+#### 3.1.4 Sort Order
 
-- 按百分比降序（最接近或已超支的排最前）
+- By percentage descending (closest to or over budget appears first)
 
-#### 3.1.5 空状态
+#### 3.1.5 Empty State
 
 - "No budgets set. Tap + to create your first budget goal."
 
-### 3.2 新建预算（Create）
+### 3.2 Create Budget (Create)
 
-**入口**：页面右上角「+ Add Budget」按钮
+**Entry point**: "+ Add Budget" button at the top-right of the page
 
-弹出 Modal：
+Opens a Modal:
 
-#### 3.2.1 选择分类
+#### 3.2.1 Select Category
 
-- 图标网格，仅显示支出分类（9 个）
-- 已有预算的分类置灰不可选（每个分类每月只能设一个预算）
-- 必选
+- Icon grid, expense categories only (9)
+- Categories with an existing budget are grayed out and unselectable (one budget per category per month)
+- Required
 
-#### 3.2.2 输入预算金额
+#### 3.2.2 Enter Budget Amount
 
-- 数字输入，支持小数（最多 2 位）
-- 必填 & > 0
-- 前缀 `$` 符号
+- Numeric input, supports decimals (up to 2 places)
+- Required & > 0
+- Prefix: `$` symbol
 
-#### 3.2.3 月份
+#### 3.2.3 Month
 
-- 自动使用全局月份选择器的当前月份，不可单独修改
+- Automatically uses the global month picker's current month — cannot be changed independently
 
-#### 3.2.4 保存
+#### 3.2.4 Save
 
-- 「Save」→ `POST /api/budgets`
-- 成功 → Toast "Budget created" + 关闭 Modal + 列表刷新
-- 失败 → Toast "Failed to create budget"
+- "Save" → `POST /api/budgets`
+- Success → Toast "Budget created" + close Modal + refresh list
+- Failure → Toast "Failed to create budget"
 
-#### 3.2.5 校验规则
+#### 3.2.5 Validation Rules
 
-| 字段 | 规则 | 错误提示 |
-|------|------|---------|
-| 分类 | 必选 | "Please select a category" |
-| 金额 | 必填 & > 0 | "Please enter a valid budget amount" |
-| 重复检查 | 该月该分类已有预算 | 前端置灰不可选 + 后端返回 409 |
+| Field | Rule | Error Message |
+|-------|------|---------------|
+| Category | Required | "Please select a category" |
+| Amount | Required & > 0 | "Please enter a valid budget amount" |
+| Duplicate check | Budget already exists for this month + category | Frontend: grayed out; Backend: returns 409 |
 
-### 3.3 编辑预算（Update）
+### 3.3 Edit Budget (Update)
 
-**入口**：点击预算卡片
+**Entry point**: Tap a budget card
 
-弹出编辑 Modal：
-- 分类显示但不可修改（只读，带图标）
-- 预算金额可修改
-- 月份不可修改
+Opens an Edit Modal:
+- Category displayed but not editable (read-only, with icon)
+- Budget amount can be modified
+- Month cannot be changed
 
-**保存**：
-- 「Save」→ `PUT /api/budgets/:id`
-- 成功 → Toast "Budget updated" + 关闭 + 列表刷新
-- 失败 → Toast "Failed to update"
+**Save**:
+- "Save" → `PUT /api/budgets/:id`
+- Success → Toast "Budget updated" + close + refresh list
+- Failure → Toast "Failed to update"
 
-**删除入口**：在编辑 Modal 内（见 3.4）
+**Delete entry point**: Inside the Edit Modal (see 3.4)
 
-### 3.4 删除预算（Delete）
+### 3.4 Delete Budget (Delete)
 
-**入口**：编辑 Modal 底部「Delete」按钮（error 色文字）
+**Entry point**: "Delete" button at the bottom of the Edit Modal (error color text)
 
-**二次确认弹窗**：
-- 标题："Delete this budget?"
-- 内容："Remove the $500 budget for Food?"
-- 「Cancel」→ 回到编辑 Modal
-- 「Delete」→ `DELETE /api/budgets/:id`
+**Confirmation dialog**:
+- Title: "Delete this budget?"
+- Content: "Remove the $500 budget for Food?"
+- "Cancel" → returns to Edit Modal
+- "Delete" → `DELETE /api/budgets/:id`
 
-**结果**：
-- 成功 → Toast "Budget deleted" + 关闭 Modal + 列表刷新
-- 失败 → Toast "Failed to delete"
+**Result**:
+- Success → Toast "Budget deleted" + close Modal + refresh list
+- Failure → Toast "Failed to delete"
 
-### 3.5 数据查询（Read）
+### 3.5 Data Query (Read)
 
-**页面加载时**：
-- `GET /api/budgets?month=当前月份` → 预算列表
-- 每条预算的已花金额通过后端聚合返回
+**On page load**:
+- `GET /api/budgets?month=current_month` → budget list
+- Spent amount for each budget is returned via backend aggregation
 
-**月份切换时**：
-- 重新请求 → 预算列表和进度全部更新
+**On month change**:
+- Re-fetch → budget list and progress fully updated
 
-### 3.6 API 接口
+### 3.6 API Endpoints
 
-| 操作 | 方法 | 端点 |
-|------|------|------|
-| 创建预算 | POST | `/api/budgets` |
-| 查询预算列表 | GET | `/api/budgets?month=2026-04` |
-| 修改预算 | PUT | `/api/budgets/:id` |
-| 删除预算 | DELETE | `/api/budgets/:id` |
+| Operation | Method | Endpoint |
+|-----------|--------|----------|
+| Create budget | POST | `/api/budgets` |
+| Query budget list | GET | `/api/budgets?month=2026-04` |
+| Update budget | PUT | `/api/budgets/:id` |
+| Delete budget | DELETE | `/api/budgets/:id` |
 
-### 3.7 数据模型
+### 3.7 Data Model
 
 ```json
 {
@@ -450,39 +450,39 @@
 
 ---
 
-## 4. CRUD 覆盖总览
+## 4. CRUD Coverage Overview
 
-| 操作 | Bills | Analysis | Goals |
-|------|-------|----------|-------|
-| Create | 记一笔（Modal） | — | 创建预算（Modal） |
-| Read | 明细列表 + 汇总 | 全部图表和卡片 | 预算进度列表 |
-| Update | 编辑记录（Modal） | — | 修改预算金额（Modal） |
-| Delete | 删除记录（二次确认） | — | 删除预算（二次确认） |
+| Operation | Bills | Analysis | Goals |
+|-----------|-------|----------|-------|
+| Create | Add a record (Modal) | — | Create a budget (Modal) |
+| Read | Record list + summary | All charts and cards | Budget progress list |
+| Update | Edit record (Modal) | — | Edit budget amount (Modal) |
+| Delete | Delete record (confirmation) | — | Delete budget (confirmation) |
 
 ---
 
-## 5. 全局行为
+## 5. Global Behaviors
 
-### 5.1 月份选择器
+### 5.1 Month Picker
 
-- 位于顶部栏右侧，全局唯一筛选控件
-- 切换后当前页面所有数据自动刷新
-- 默认当前月份
+- Located at the top-right of the header bar — the sole global filter control
+- Switching refreshes all data on the current page
+- Defaults to the current month
 
-### 5.2 Modal 通用规则
+### 5.2 Modal — General Rules
 
-- 居中弹出，背景遮罩（毛玻璃）
-- 点击遮罩可关闭
-- 关闭时无需确认未保存内容
+- Centered overlay with a frosted-glass backdrop
+- Tap backdrop to close
+- No unsaved-content confirmation on close
 
-### 5.3 Toast 通用规则
+### 5.3 Toast — General Rules
 
-- 操作成功/失败后右上角弹出
-- 自动消失（2-3 秒）
-- 成功：默认样式；失败：error 色
+- Appears at the top-right after success/failure
+- Auto-dismisses (2–3 seconds)
+- Success: default style; Failure: error color
 
-### 5.4 二次确认通用规则
+### 5.4 Confirmation Dialog — General Rules
 
-- 仅删除操作触发
-- 确认弹窗需明确说明删除内容
-- 「Cancel」+ 「Delete」两个按钮
+- Triggered only for delete operations
+- Dialog must clearly describe what will be deleted
+- Two buttons: "Cancel" + "Delete"

@@ -1,6 +1,6 @@
-# Money Tracker
+# iSpent
 
-> A personal finance tracking web app with an editorial, magazine-inspired interface.
+> A modern, casual-feeling finance tracker that turns daily bookkeeping into an effortless habit — youthful and approachable on the surface, structured and data-precise underneath.
 
 ---
 
@@ -14,7 +14,7 @@ International students and young working professionals who need a fast, intuitiv
 
 ## Solution
 
-Money Tracker is a single-page web application that combines quick transaction logging, visual spending analysis, and category-based budget tracking in a clean, editorial-style interface. No accounts, no clutter — just open and start tracking.
+iSpent is a single-page web application that combines quick transaction logging, visual spending analysis, and category-based budget tracking in a modern, approachable interface. No accounts, no clutter — just open and start tracking.
 
 ---
 
