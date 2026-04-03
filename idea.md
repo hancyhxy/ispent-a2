@@ -16,6 +16,15 @@ International students and young working professionals who need a fast, intuitiv
 
 iSpent is a single-page web application that combines quick transaction logging, visual spending analysis, and category-based budget tracking in a modern, approachable interface. No accounts, no clutter — just open and start tracking.
 
+### Design Highlight — Quick Notes (Tag System)
+
+A key innovation that speeds up daily expense entry: each category comes with built-in quick note tags (e.g., Transport → bus, taxi, fuel; Food → lunch, dinner, grocery, snack). Users tap a tag to instantly fill in the note field — no typing needed for common expenses.
+
+- **Built-in tags**: Every category has sensible defaults so users can start logging right away
+- **Customizable**: A "Manage Quick Notes" modal lets users add or remove tags per category, tailoring the experience to their own spending habits
+- **Persistent**: Custom tags are saved in localStorage, so they survive page refreshes and return visits
+- **Meaningful context**: Tags help users understand exactly where their money goes within each category (e.g., distinguishing "gym" from "medicine" under Health)
+
 ---
 
 ## Core Pages

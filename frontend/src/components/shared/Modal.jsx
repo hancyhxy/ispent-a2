@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 
-export default function Modal({ isOpen, onClose, title, children }) {
+export default function Modal({ isOpen, onClose, title, footer, children }) {
   const modalRef = useRef(null);
 
   useEffect(() => {
@@ -44,14 +44,21 @@ export default function Modal({ isOpen, onClose, title, children }) {
         aria-label={title}
         onClick={(e) => e.stopPropagation()}
         className="relative bg-card z-10 w-full md:w-auto md:min-w-[480px] md:max-w-[560px]
-          rounded-t-3xl md:rounded-3xl p-8 max-h-[90vh] overflow-y-auto
+          rounded-t-3xl md:rounded-3xl max-h-[90vh] flex flex-col
           shadow-[0_10px_15px_-3px_rgba(0,0,0,0.05),0_4px_6px_-2px_rgba(0,0,0,0.02)]
           transition-transform duration-200 ease-out"
       >
-        {title && (
-          <h2 className="text-xl font-semibold text-text-primary mb-6">{title}</h2>
+        <div className={`flex-1 overflow-y-auto px-8 pt-8 ${footer ? 'pb-4' : 'pb-8'}`}>
+          {title && (
+            <h2 className="text-xl font-semibold text-text-primary mb-6">{title}</h2>
+          )}
+          {children}
+        </div>
+        {footer && (
+          <div className="px-8 pb-8 pt-2">
+            {footer}
+          </div>
         )}
-        {children}
       </div>
     </div>
   );

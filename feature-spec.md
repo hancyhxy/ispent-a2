@@ -87,10 +87,23 @@ Opens a Modal with the following sections:
 
 - Single-line text field, placeholder: "Add a note..."
 - Optional, can be left blank
-- Quick-note tags:
-  - Presets: lunch / dinner / grocery / daily / transport
+- Quick-note tags (per category):
+  - Each category has its own set of default tags (e.g., Transport → bus, taxi, fuel; Food → lunch, dinner, grocery, snack)
+  - Tags update dynamically when the user switches categories
   - Tap a tag → auto-fills the note field
   - Manual input overrides the tag content
+  - Gear icon (⚙) button next to the tags → opens the **Manage Quick Notes** modal
+
+#### 1.3.4a Manage Quick Notes Modal
+
+- Displays all existing tags for the current category as removable chips (tag name + ✕ button)
+- "Enter a new tag..." input field + "+ Add" button to create custom tags
+- Press Enter in the input field also adds the tag
+- Duplicate tags are silently ignored (case-insensitive)
+- Empty state: "No quick notes yet. Add one below."
+- All changes are persisted to `localStorage` (`ispent_quick_notes` key)
+- Tags survive page refreshes and return visits
+- Default tags for all 14 categories are defined in `useQuickNotes.js`
 
 #### 1.3.5 Date Picker
 
@@ -498,11 +511,11 @@ frontend/
 ├── src/
 │   ├── components/
 │   │   ├── layout/          # Sidebar, Header, BottomTabBar
-│   │   ├── bills/           # RecordList, RecordModal, RecordItem
+│   │   ├── bills/           # RecordList, RecordModal, RecordItem, QuickNoteManager
 │   │   ├── analysis/        # OverviewCards, DonutChart, BarChart, CategoryRanking
 │   │   ├── goals/           # BudgetList, BudgetCard, BudgetModal
 │   │   └── shared/          # Modal, Toast, ConfirmDialog, MonthPicker, EmptyState
-│   ├── hooks/               # useRecords, useBudgets, useStats, useMonthPicker
+│   ├── hooks/               # useRecords, useBudgets, useStats, useMonthPicker, useQuickNotes
 │   ├── services/            # api.js (unified fetch wrapper + error handling)
 │   ├── utils/               # formatCurrency, formatDate, categoryMap
 │   ├── constants/           # categories, colors, routes

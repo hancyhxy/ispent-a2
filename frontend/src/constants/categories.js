@@ -27,5 +27,3 @@ export const CHART_COLORS = [
   '#4B6EF5', '#10B981', '#F97316', '#EF4444', '#9333EA',
   '#FFD147', '#06B6D4', '#EC4899', '#8B5CF6', '#14B8A6',
 ];
-
-export const QUICK_NOTES = ['lunch', 'dinner', 'grocery', 'daily', 'transport'];

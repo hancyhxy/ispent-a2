@@ -1,6 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
+import { Settings } from 'lucide-react';
 import Modal from '../shared/Modal';
-import { EXPENSE_CATEGORIES, INCOME_CATEGORIES, QUICK_NOTES } from '../../constants/categories';
+import QuickNoteManager from './QuickNoteManager';
+import { EXPENSE_CATEGORIES, INCOME_CATEGORIES } from '../../constants/categories';
+import useQuickNotes from '../../hooks/useQuickNotes';
 import { getTodayString } from '../../utils/helpers';
 
 export default function RecordModal({ isOpen, onClose, record, onSave, onSaveAndAnother, onDelete }) {
@@ -10,7 +13,9 @@ export default function RecordModal({ isOpen, onClose, record, onSave, onSaveAnd
   const [note, setNote] = useState('');
   const [date, setDate] = useState(getTodayString());
   const [errors, setErrors] = useState({});
+  const [showTagManager, setShowTagManager] = useState(false);
   const amountRef = useRef(null);
+  const { getTags, addTag, removeTag } = useQuickNotes();
   const isEdit = !!record;
 
   useEffect(() => {
@@ -29,7 +34,6 @@ export default function RecordModal({ isOpen, onClose, record, onSave, onSaveAnd
         setDate(getTodayString());
       }
       setErrors({});
-      setTimeout(() => amountRef.current?.focus(), 100);
     }
   }, [isOpen, record]);
 
@@ -70,7 +74,41 @@ export default function RecordModal({ isOpen, onClose, record, onSave, onSaveAnd
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title={isEdit ? 'Edit Record' : 'Add Record'}>
+    <>
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title={isEdit ? 'Edit Record' : 'Add Record'}
+      footer={
+        <div className="flex flex-row gap-2 md:justify-end">
+          {isEdit && (
+            <button
+              onClick={onDelete}
+              className="flex-1 md:flex-none py-3 md:px-6 rounded-2xl text-sm font-semibold
+                text-error hover:text-red-700 transition-colors"
+            >
+              Delete this record
+            </button>
+          )}
+          {!isEdit && (
+            <button
+              onClick={handleSaveAndAnother}
+              className="flex-1 md:flex-none py-3 md:px-6 rounded-2xl bg-surface hover:bg-gray-200
+                text-sm font-semibold text-text-secondary transition-colors"
+            >
+              Save & Add Another
+            </button>
+          )}
+          <button
+            onClick={handleSave}
+            className="flex-1 md:flex-none py-3 md:px-8 rounded-2xl bg-primary hover:bg-primary-light
+              text-white text-sm font-semibold transition-colors"
+          >
+            Save
+          </button>
+        </div>
+      }
+    >
       {/* Type tabs */}
       <div className="flex gap-2 mb-6">
         {['expense', 'income'].map(t => (
@@ -136,22 +174,32 @@ export default function RecordModal({ isOpen, onClose, record, onSave, onSaveAnd
           className="w-full px-4 py-3 rounded-2xl bg-surface text-text-primary text-sm
             focus:outline-none focus:ring-2 focus:ring-primary"
         />
-        <div className="flex gap-2 mt-2 flex-wrap">
-          {QUICK_NOTES.map(tag => (
+        {category && (
+          <div className="flex gap-2 mt-2 flex-wrap items-center">
+            {getTags(category).map(tag => (
+              <button
+                key={tag}
+                onClick={() => setNote(tag)}
+                className="px-4 py-2 rounded-full bg-surface text-sm font-medium
+                  text-text-secondary hover:bg-gray-200 transition-colors"
+              >
+                {tag}
+              </button>
+            ))}
             <button
-              key={tag}
-              onClick={() => setNote(tag)}
-              className="px-3 py-1 rounded-full bg-surface text-xs font-medium
-                text-text-secondary hover:bg-gray-200 transition-colors"
+              onClick={() => setShowTagManager(true)}
+              className="flex items-center justify-center w-9 h-9 rounded-full
+                bg-surface hover:bg-gray-200 text-text-muted transition-colors"
+              aria-label="Manage quick notes"
             >
-              {tag}
+              <Settings size={16} />
             </button>
-          ))}
-        </div>
+          </div>
+        )}
       </div>
 
       {/* Date */}
-      <div className="mb-6">
+      <div>
         <label className="text-xs font-medium text-text-muted mb-2 block">Date</label>
         <input
           type="date"
@@ -162,36 +210,16 @@ export default function RecordModal({ isOpen, onClose, record, onSave, onSaveAnd
             focus:outline-none focus:ring-2 focus:ring-primary"
         />
       </div>
-
-      {/* Actions */}
-      <div className="flex flex-col gap-2">
-        <button
-          onClick={handleSave}
-          className="w-full py-3 rounded-2xl bg-primary hover:bg-primary-light text-white
-            text-sm font-semibold transition-colors"
-        >
-          Save
-        </button>
-
-        {!isEdit && (
-          <button
-            onClick={handleSaveAndAnother}
-            className="w-full py-3 rounded-2xl bg-surface hover:bg-gray-200
-              text-sm font-semibold text-text-secondary transition-colors"
-          >
-            Save & Add Another
-          </button>
-        )}
-
-        {isEdit && (
-          <button
-            onClick={onDelete}
-            className="w-full py-3 text-sm font-semibold text-error hover:text-red-700 transition-colors"
-          >
-            Delete this record
-          </button>
-        )}
-      </div>
     </Modal>
+
+    <QuickNoteManager
+      isOpen={showTagManager}
+      onClose={() => setShowTagManager(false)}
+      category={category}
+      tags={getTags(category)}
+      onAdd={addTag}
+      onRemove={removeTag}
+    />
+    </>
   );
 }

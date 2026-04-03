@@ -20,18 +20,16 @@ export default function AnalysisPage({ selectedMonth }) {
       <OverviewCards data={monthly} />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="flex flex-col gap-6">
-          <DonutChart
-            data={categories.categories}
-            total={categories.total}
-            type={categoryType}
-            onTypeChange={setCategoryType}
-          />
-          <CategoryRanking data={categories.categories} />
-        </div>
-
+        <DonutChart
+          data={categories.categories}
+          total={categories.total}
+          type={categoryType}
+          onTypeChange={setCategoryType}
+        />
         <ExpenseBarChart data={daily.daily} average={daily.average} />
       </div>
+
+      <CategoryRanking data={categories.categories} />
     </div>
   );
 }

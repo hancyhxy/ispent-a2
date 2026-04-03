@@ -18,8 +18,8 @@ export default function ExpenseBarChart({ data, average }) {
   return (
     <div className="bg-card rounded-3xl p-6">
       <h3 className="text-sm font-semibold text-text-primary mb-4">Daily Expense Trend</h3>
-      <ResponsiveContainer width="100%" height={240}>
-        <BarChart data={data} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
+      <ResponsiveContainer width="100%" height={280}>
+        <BarChart data={data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
           <XAxis
             dataKey="day"
             tick={{ fontSize: 11, fill: '#9CA3AF' }}
@@ -31,7 +31,7 @@ export default function ExpenseBarChart({ data, average }) {
             tick={{ fontSize: 11, fill: '#9CA3AF' }}
             axisLine={false}
             tickLine={false}
-            width={50}
+            width={60}
           />
           <Tooltip
             formatter={(value) => [formatCurrency(value), 'Amount']}
@@ -45,9 +45,10 @@ export default function ExpenseBarChart({ data, average }) {
               strokeDasharray="6 4"
               label={{
                 value: `Avg: ${formatCurrency(average)}`,
-                position: 'right',
+                position: 'insideTopRight',
                 fontSize: 11,
                 fill: '#F97316',
+                offset: 8,
               }}
             />
           )}
