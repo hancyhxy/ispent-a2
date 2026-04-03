@@ -6,10 +6,12 @@ export default function Header({ selectedMonth, onMonthChange }) {
     <header className="flex items-center justify-between px-6 lg:px-8 h-16 shrink-0">
       {/* Greeting - hidden on mobile */}
       <div className="hidden md:block">
-        <h1 className="text-2xl font-semibold text-text-primary leading-tight">
+        <h1 className="text-lg font-semibold text-text-primary" style={{ lineHeight: '1.4' }}>
           {getGreeting()}
         </h1>
-        <p className="text-sm text-text-muted">{formatDate(getTodayString())}</p>
+        <p className="text-xs font-medium text-text-muted" style={{ lineHeight: '1.4' }}>
+          {formatDate(getTodayString())}
+        </p>
       </div>
 
       {/* Month Picker - centered on mobile */}

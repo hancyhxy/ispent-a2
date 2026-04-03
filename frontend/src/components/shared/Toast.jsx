@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
+import { CircleCheck, CircleX } from 'lucide-react';
 
 let toastId = 0;
 let addToastFn = null;
@@ -23,17 +24,22 @@ export default function ToastContainer() {
   }, [toasts]);
 
   return (
-    <div className="fixed top-4 right-4 z-[100] flex flex-col gap-2">
+    <div className="fixed top-20 left-1/2 -translate-x-1/2 z-[100] flex flex-col items-center gap-2">
       {toasts.map((toast) => (
         <div
           key={toast.id}
           role="alert"
           aria-live="polite"
-          className={`px-4 py-3 rounded-2xl text-sm font-medium text-white shadow-lg
-            transition-all duration-200 ease-out animate-slide-in
-            ${toast.type === 'error' ? 'bg-error' : 'bg-primary'}`}
+          className="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-medium
+            bg-gray-800 text-gray-100 shadow-md
+            transition-all duration-200 ease-out animate-slide-in"
         >
-          {toast.message}
+          {toast.type === 'error' ? (
+            <CircleX size={14} className="text-red-400 shrink-0" />
+          ) : (
+            <CircleCheck size={14} className="text-green-400 shrink-0" />
+          )}
+          <span>{toast.message}</span>
         </div>
       ))}
     </div>

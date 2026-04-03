@@ -9,13 +9,11 @@ const NAV_ITEMS = [
 export default function Sidebar({ currentPage, onNavigate }) {
   return (
     <nav className="hidden md:flex flex-col h-screen sticky top-0 bg-card
-      lg:w-[200px] md:w-[56px] shrink-0">
+      lg:w-[148px] md:w-[56px] shrink-0">
       {/* Logo */}
-      <div className="flex items-center lg:px-6 md:px-0 md:justify-center h-16">
-        <span className="text-xl font-bold text-primary">
-          <span className="lg:inline md:hidden">iSpent</span>
-          <span className="lg:hidden md:inline">iS</span>
-        </span>
+      <div className="flex items-center gap-2 justify-center h-16">
+        <img src="/favicon.svg" alt="iSpent logo" className="w-7 h-7" />
+        <span className="text-xl font-bold text-primary lg:inline md:hidden">iSpent</span>
       </div>
 
       {/* Nav items */}

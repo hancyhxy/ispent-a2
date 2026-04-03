@@ -201,8 +201,16 @@ Based on an **8px grid**, with 4px and 12px fine-tuning:
 
 ### Toast
 
-- Appears at the top-right after an action
-- Auto-dismisses (2–3 seconds)
+- Position: top-center of the screen (fixed, horizontally centered)
+- Style: dark tooltip — `bg-gray-800`, `text-gray-100`, `rounded-lg` (8px), compact padding (`px-4 py-2`)
+- Typography: `text-xs` (12px), `font-medium`
+- Icon + text layout: left icon + right message, `gap-2`
+  - Success: green circle-check icon (`text-green-400`) + message (e.g., "Record added")
+  - Error: red circle-x icon (`text-red-400`) + message (e.g., "Failed to save")
+- Both success and error use the same dark background — icon color distinguishes the state
+- Auto-dismisses after 2.5 seconds
+- Shadow: `shadow-md`
+- Animation: slide-in from top
 
 ### Confirmation Dialog
 
