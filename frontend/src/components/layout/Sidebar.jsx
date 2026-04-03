@@ -26,7 +26,7 @@ export default function Sidebar({ currentPage, onNavigate }) {
               onClick={() => onNavigate(key)}
               aria-current={isActive ? 'page' : undefined}
               className={`flex items-center gap-3 lg:px-4 md:px-0 md:justify-center lg:justify-start
-                py-3 rounded-2xl transition-colors text-sm font-medium
+                py-3 rounded-2xl transition-colors text-sm font-medium focus:outline-none
                 ${isActive
                   ? 'bg-primary/10 text-primary'
                   : 'text-text-muted hover:bg-surface hover:text-text-secondary'}`}
