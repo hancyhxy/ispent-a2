@@ -486,3 +486,63 @@ Opens an Edit Modal:
 - Triggered only for delete operations
 - Dialog must clearly describe what will be deleted
 - Two buttons: "Cancel" + "Delete"
+
+---
+
+## 6. Project Structure
+
+### 6.1 Frontend
+
+```
+frontend/
+├── src/
+│   ├── components/
+│   │   ├── layout/          # Sidebar, Header, BottomTabBar
+│   │   ├── bills/           # RecordList, RecordModal, RecordItem
+│   │   ├── analysis/        # OverviewCards, DonutChart, BarChart, CategoryRanking
+│   │   ├── goals/           # BudgetList, BudgetCard, BudgetModal
+│   │   └── shared/          # Modal, Toast, ConfirmDialog, MonthPicker, EmptyState
+│   ├── hooks/               # useRecords, useBudgets, useStats, useMonthPicker
+│   ├── services/            # api.js (unified fetch wrapper + error handling)
+│   ├── utils/               # formatCurrency, formatDate, categoryMap
+│   ├── constants/           # categories, colors, routes
+│   ├── App.jsx
+│   └── main.jsx
+├── index.html
+├── tailwind.config.js
+├── vite.config.js
+└── package.json
+```
+
+### 6.2 Backend
+
+```
+backend/
+├── server.js                # Express app entry, middleware, CORS
+├── db.js                    # MongoDB connection (Mongoose)
+├── routes/
+│   ├── records.js           # /api/records CRUD
+│   ├── budgets.js           # /api/budgets CRUD
+│   └── stats.js             # /api/stats/* read-only aggregations
+├── models/
+│   ├── Record.js            # Mongoose schema for records
+│   └── Budget.js            # Mongoose schema for budgets
+└── package.json
+```
+
+### 6.3 API Error Handling
+
+**Backend** — all routes return errors in a standard format:
+
+```json
+{ "error": "Human-readable error message" }
+```
+
+With appropriate HTTP status codes: `400` (validation), `404` (not found), `409` (conflict), `500` (server error).
+
+**Frontend** — `services/api.js` provides a unified wrapper:
+
+- All API calls go through this module
+- On success: return parsed data
+- On failure: throw error with message from response body
+- Components catch errors and display via Toast (never a blank screen)

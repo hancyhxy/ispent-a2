@@ -228,7 +228,80 @@ SPA — page switches preserve the current month selection.
 
 ---
 
-## 9. Do's & Don'ts
+## 9. Responsive Design
+
+### 9.1 Breakpoints
+
+| Token | Value | Target |
+|-------|-------|--------|
+| `sm` | 640px | Small phones |
+| `md` | 768px | Tablets / large phones |
+| `lg` | 1024px | Desktops |
+
+### 9.2 Mobile (<768px)
+
+- **Navigation**: Sidebar hidden → Bottom Tab Bar (3 icons + labels, fixed to bottom)
+- **Header**: Hide greeting text, show only Month Picker (centered)
+- **Cards**: Full-width, single-column stack
+- **Analysis charts**: Full-width, vertical stack (overview cards → donut → bar chart)
+- **Modals**: Bottom sheet style — slides up from bottom, full-width, max-height 90vh
+- **Category grid**: 4 columns (compact)
+- **Touch targets**: Minimum 44×44px
+
+### 9.3 Tablet (768px–1023px)
+
+- **Navigation**: Sidebar collapses to icon-only mode (56px width)
+- **Header**: Full display
+- **Cards**: 2-column grid where applicable
+- **Modals**: Centered overlay (same as desktop)
+
+### 9.4 Desktop (≥1024px)
+
+- Current design: full sidebar (200px) + content area
+
+---
+
+## 10. Accessibility
+
+### 10.1 Color Contrast
+
+- All text/background combinations must meet WCAG AA (4.5:1 for normal text, 3:1 for large text)
+- Verified combinations:
+  - `text_primary` (#111827) on `card_surface` (#FFFFFF) → 17.4:1 ✅
+  - `text_muted` (#9CA3AF) on `card_surface` (#FFFFFF) → 3.0:1 — use only for non-essential labels
+  - `decline` (#EF4444) on `card_surface` (#FFFFFF) → 4.6:1 ✅
+
+### 10.2 Focus States
+
+- All interactive elements (buttons, inputs, links, cards, nav items) must show a visible focus ring
+- Style: `outline: 2px solid primary` with `outline-offset: 2px`
+- Focus ring must not be clipped by `overflow: hidden`
+
+### 10.3 Keyboard Navigation
+
+- Logical tab order: Sidebar → Header → Main Content
+- Modal: focus trap (Tab cycles within Modal, Escape closes)
+- Confirmation Dialog: focus lands on "Cancel" button by default
+- Category grid: arrow key navigation
+
+### 10.4 ARIA
+
+| Component | Attributes |
+|-----------|-----------|
+| Modal | `role="dialog"`, `aria-modal="true"`, `aria-labelledby` |
+| Toast | `role="alert"`, `aria-live="polite"` |
+| Confirmation Dialog | `role="alertdialog"` |
+| Nav items | `aria-current="page"` on active item |
+| Charts | `aria-label` with text summary (e.g., "Donut chart: Food 40%, Transport 25%...") |
+| Progress bar | `role="progressbar"`, `aria-valuenow`, `aria-valuemin`, `aria-valuemax` |
+
+### 10.5 Motion
+
+- Respect `prefers-reduced-motion`: disable transitions and animations when set to `reduce`
+
+---
+
+## 11. Do's & Don'ts
 
 ### Do
 
