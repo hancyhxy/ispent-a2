@@ -10,6 +10,10 @@ A modern, single-page finance tracker that turns daily bookkeeping into an effor
   <img src="screenshots/flow.png" alt="iSpent App Flow" width="100%" />
 </p>
 
+<p align="center">
+  <img src="reference/appstore/web.gif" alt="iSpent Web Demo" width="100%" />
+</p>
+
 ## Problem
 
 International students and young professionals juggle diverse spending categories (food, transport, tuition, entertainment) on a limited budget. Most existing tools are either too complex or too generic to provide quick, meaningful insights into where the money goes. iSpent offers a streamlined, no-account-needed experience to log, analyze, and budget daily finances.
