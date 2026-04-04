@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="screenshots/00-banner.png" alt="iSpent Banner" width="100%" />
+</p>
+
 # iSpent — Personal Expense Tracker
 
 A modern, single-page finance tracker that turns daily bookkeeping into an effortless habit. Built for international students and young professionals who need a fast, intuitive way to log transactions and understand spending patterns at a glance.
@@ -31,6 +35,12 @@ International students and young professionals juggle diverse spending categorie
 - Quick note tags per category for faster expense logging, with a Manage Quick Notes modal to add or remove custom tags (persisted in localStorage)
 - Toast notifications for all user actions
 - Input validation on both client and server side
+
+## App Flow
+
+<p align="center">
+  <img src="screenshots/flow.png" alt="iSpent App Flow" width="100%" />
+</p>
 
 ## Getting Started
 

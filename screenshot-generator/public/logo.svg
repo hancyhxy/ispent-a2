@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- App Store style rounded rectangle background -->
+  <rect x="2" y="2" width="60" height="60" rx="14" fill="#4B6EF5"/>
+  <!-- S letter -->
+  <text x="32" y="47" text-anchor="middle" font-family="Inter, sans-serif" font-weight="500" font-size="36" fill="#FFFFFF">S</text>
+  <!-- i stem (white line through S) -->
+  <rect x="30" y="22" width="4" height="25" rx="2" fill="#FFFFFF"/>
+  <!-- i dot (yellow, above S) -->
+  <circle cx="32" cy="12" r="3.5" fill="#FFD147"/>
+</svg>
