@@ -6,6 +6,10 @@
 
 A modern, single-page finance tracker that turns daily bookkeeping into an effortless habit. Built for international students and young professionals who need a fast, intuitive way to log transactions and understand spending patterns at a glance.
 
+<p align="center">
+  <img src="screenshots/flow.png" alt="iSpent App Flow" width="100%" />
+</p>
+
 ## Problem
 
 International students and young professionals juggle diverse spending categories (food, transport, tuition, entertainment) on a limited budget. Most existing tools are either too complex or too generic to provide quick, meaningful insights into where the money goes. iSpent offers a streamlined, no-account-needed experience to log, analyze, and budget daily finances.
@@ -35,12 +39,6 @@ International students and young professionals juggle diverse spending categorie
 - Quick note tags per category for faster expense logging, with a Manage Quick Notes modal to add or remove custom tags (persisted in localStorage)
 - Toast notifications for all user actions
 - Input validation on both client and server side
-
-## App Flow
-
-<p align="center">
-  <img src="screenshots/flow.png" alt="iSpent App Flow" width="100%" />
-</p>
 
 ## Getting Started
 
