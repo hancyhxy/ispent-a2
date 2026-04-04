@@ -11,7 +11,7 @@ A modern, single-page finance tracker that turns daily bookkeeping into an effor
 </p>
 
 <p align="center">
-  <img src="reference/appstore/web.gif" alt="iSpent Web Demo" width="100%" />
+  <img src="screenshots/web.gif" alt="iSpent Web Demo" width="100%" />
 </p>
 
 ## Problem
