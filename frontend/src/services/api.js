@@ -1,10 +1,16 @@
 const BASE_URL = '/api';
+const TOKEN_KEY = 'ispent_token';
+
+export const getToken = () => localStorage.getItem(TOKEN_KEY);
+export const setToken = (t) => localStorage.setItem(TOKEN_KEY, t);
+export const clearToken = () => localStorage.removeItem(TOKEN_KEY);
 
 async function request(method, path, body) {
-  const options = {
-    method,
-    headers: { 'Content-Type': 'application/json' },
-  };
+  const headers = { 'Content-Type': 'application/json' };
+  const token = getToken();
+  if (token) headers.Authorization = `Bearer ${token}`;
+
+  const options = { method, headers };
   if (body) options.body = JSON.stringify(body);
 
   const res = await fetch(`${BASE_URL}${path}`, options);
@@ -15,6 +21,12 @@ async function request(method, path, body) {
   }
   return data;
 }
+
+// Auth
+export const apiCheckEmail = (email) => request('POST', '/auth/check-email', { email });
+export const apiRegister = (data) => request('POST', '/auth/register', data);
+export const apiLogin = (data) => request('POST', '/auth/login', data);
+export const apiMe = () => request('GET', '/auth/me');
 
 // Records
 export const fetchRecords = (month) => request('GET', `/records?month=${month}`);

@@ -94,7 +94,7 @@ export default function MockGoalsPage() {
         <div>
           <h2 className="text-xl font-semibold text-text-primary">My Goals</h2>
           <p className="text-sm text-text-muted mt-0.5">
-            Keep tracking — 顺手记一笔，持续往目标走
+            Keep tracking — log it in seconds, stay on track.
           </p>
         </div>
         <button
