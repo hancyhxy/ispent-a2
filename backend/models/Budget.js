@@ -1,6 +1,12 @@
 const mongoose = require('mongoose');
 
 const budgetSchema = new mongoose.Schema({
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+    index: true
+  },
   category: {
     type: String,
     required: true
@@ -16,6 +22,8 @@ const budgetSchema = new mongoose.Schema({
   }
 });
 
-budgetSchema.index({ category: 1, month: 1 }, { unique: true });
+// One budget per category per month, scoped to each user
+// (without userId in the key, two users could not both budget the same category).
+budgetSchema.index({ userId: 1, category: 1, month: 1 }, { unique: true });
 
 module.exports = mongoose.model('Budget', budgetSchema);

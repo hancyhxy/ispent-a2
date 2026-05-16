@@ -1,6 +1,12 @@
 const mongoose = require('mongoose');
 
 const recordSchema = new mongoose.Schema({
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+    index: true
+  },
   type: {
     type: String,
     enum: ['expense', 'income'],
