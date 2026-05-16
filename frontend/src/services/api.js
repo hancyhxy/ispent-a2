@@ -17,6 +17,13 @@ async function request(method, path, body) {
   const data = await res.json();
 
   if (!res.ok) {
+    // An expired/invalid token on a protected route: drop the stale
+    // token and bounce to the auth screen instead of leaving the user
+    // stuck on a half-broken page.
+    if (res.status === 401 && getToken()) {
+      clearToken();
+      window.location.reload();
+    }
     throw new Error(data.error || 'Something went wrong');
   }
   return data;
@@ -44,3 +51,9 @@ export const deleteBudget = (id) => request('DELETE', `/budgets/${id}`);
 export const fetchMonthlyStats = (month) => request('GET', `/stats/monthly?month=${month}`);
 export const fetchCategoryStats = (month, type) => request('GET', `/stats/categories?month=${month}&type=${type}`);
 export const fetchDailyStats = (month) => request('GET', `/stats/daily?month=${month}`);
+
+// Goals (third entity — savings / spending_limit / simple_todo)
+export const fetchGoals = () => request('GET', '/goals');
+export const createGoal = (data) => request('POST', '/goals', data);
+export const updateGoal = (id, data) => request('PUT', `/goals/${id}`, data);
+export const deleteGoal = (id) => request('DELETE', `/goals/${id}`);

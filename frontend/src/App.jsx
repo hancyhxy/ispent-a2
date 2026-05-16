@@ -72,7 +72,7 @@ export default function App() {
             <AnalysisPage selectedMonth={selectedMonth} />
           )}
           {currentPage === 'goals' && (
-            <GoalsPage selectedMonth={selectedMonth} />
+            <GoalsPage />
           )}
         </main>
       </div>

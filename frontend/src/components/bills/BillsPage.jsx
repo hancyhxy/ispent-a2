@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Plus } from 'lucide-react';
+import { useState, useMemo } from 'react';
+import { Plus, Search } from 'lucide-react';
 import useRecords from '../../hooks/useRecords';
 import RecordList from './RecordList';
 import RecordModal from './RecordModal';
@@ -13,6 +13,28 @@ export default function BillsPage({ selectedMonth }) {
   const [showModal, setShowModal] = useState(false);
   const [editingRecord, setEditingRecord] = useState(null);
   const [confirmDelete, setConfirmDelete] = useState(null);
+  const [search, setSearch] = useState('');
+
+  // Live search: filter the already-loaded month's records client-side so
+  // results update instantly as the user types — no extra network round-trip.
+  // Matches against the note text and the category's display name.
+  const filteredGroups = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    if (!q) return groupedRecords;
+
+    return groupedRecords
+      .map((group) => {
+        const records = group.records.filter((r) => {
+          const categoryName = CATEGORY_MAP[r.category]?.name || r.category;
+          return (
+            (r.note || '').toLowerCase().includes(q) ||
+            categoryName.toLowerCase().includes(q)
+          );
+        });
+        return { ...group, records };
+      })
+      .filter((group) => group.records.length > 0);
+  }, [groupedRecords, search]);
 
   const handleCreate = () => {
     setEditingRecord(null);
@@ -77,13 +99,30 @@ export default function BillsPage({ selectedMonth }) {
         </button>
       </div>
 
+      {/* Live search — filters the list in real time as the user types */}
+      <div className="relative mb-4">
+        <Search
+          size={16}
+          className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none"
+        />
+        <input
+          type="search"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Search by note or category..."
+          className="w-full pl-9 pr-3 py-2.5 rounded-2xl bg-white border border-gray-200
+            text-sm placeholder:text-text-muted focus:outline-none focus:border-primary
+            transition-colors"
+        />
+      </div>
+
       {/* Record list */}
       {loading ? (
         <div className="flex justify-center py-16">
           <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
         </div>
       ) : (
-        <RecordList groupedRecords={groupedRecords} onRecordClick={handleEdit} />
+        <RecordList groupedRecords={filteredGroups} onRecordClick={handleEdit} />
       )}
 
       {/* Create/Edit modal */}
