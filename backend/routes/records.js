@@ -17,7 +17,9 @@ router.post('/', async (req, res) => {
       return res.status(400).json({ error: 'Amount must be greater than 0' });
     }
 
-    const record = await Record.create({ type, category, amount, note: note || '', date });
+    const record = await Record.create({
+      userId: req.user.id, type, category, amount, note: note || '', date
+    });
     res.status(201).json(record);
   } catch (err) {
     res.status(500).json({ error: 'Failed to create record' });
@@ -38,6 +40,7 @@ router.get('/', async (req, res) => {
     const end = `${nextMonth}-01`;
 
     const records = await Record.find({
+      userId: req.user.id,
       date: { $gte: start, $lt: end }
     }).sort({ date: -1, createdAt: -1 });
 
@@ -56,8 +59,10 @@ router.put('/:id', async (req, res) => {
       return res.status(400).json({ error: 'Amount must be greater than 0' });
     }
 
-    const record = await Record.findByIdAndUpdate(
-      req.params.id,
+    // Scope by userId so a user can only update their own records
+    // (prevents IDOR via a guessed/leaked record id).
+    const record = await Record.findOneAndUpdate(
+      { _id: req.params.id, userId: req.user.id },
       { type, category, amount, note, date },
       { new: true, runValidators: true }
     );
@@ -74,7 +79,9 @@ router.put('/:id', async (req, res) => {
 // Delete record
 router.delete('/:id', async (req, res) => {
   try {
-    const record = await Record.findByIdAndDelete(req.params.id);
+    const record = await Record.findOneAndDelete({
+      _id: req.params.id, userId: req.user.id
+    });
     if (!record) {
       return res.status(404).json({ error: 'Record not found' });
     }

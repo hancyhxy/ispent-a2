@@ -1,4 +1,5 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const router = express.Router();
 const Record = require('../models/Record');
 
@@ -21,7 +22,12 @@ router.get('/monthly', async (req, res) => {
     const { start, end } = getMonthRange(month);
 
     const result = await Record.aggregate([
-      { $match: { date: { $gte: start, $lt: end } } },
+      {
+        $match: {
+          userId: new mongoose.Types.ObjectId(req.user.id),
+          date: { $gte: start, $lt: end }
+        }
+      },
       {
         $group: {
           _id: '$type',
@@ -65,6 +71,7 @@ router.get('/categories', async (req, res) => {
     const result = await Record.aggregate([
       {
         $match: {
+          userId: new mongoose.Types.ObjectId(req.user.id),
           type,
           date: { $gte: start, $lt: end }
         }
@@ -107,6 +114,7 @@ router.get('/daily', async (req, res) => {
     const result = await Record.aggregate([
       {
         $match: {
+          userId: new mongoose.Types.ObjectId(req.user.id),
           type: 'expense',
           date: { $gte: start, $lt: end }
         }

@@ -1,4 +1,5 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const router = express.Router();
 const Budget = require('../models/Budget');
 const Record = require('../models/Record');
@@ -15,7 +16,9 @@ router.post('/', async (req, res) => {
       return res.status(400).json({ error: 'Budget amount must be greater than 0' });
     }
 
-    const budget = await Budget.create({ category, budgetAmount, month });
+    const budget = await Budget.create({
+      userId: req.user.id, category, budgetAmount, month
+    });
     res.status(201).json(budget);
   } catch (err) {
     if (err.code === 11000) {
@@ -33,7 +36,7 @@ router.get('/', async (req, res) => {
       return res.status(400).json({ error: 'Month parameter is required (YYYY-MM)' });
     }
 
-    const budgets = await Budget.find({ month });
+    const budgets = await Budget.find({ userId: req.user.id, month });
 
     // Calculate spent amounts from records
     const [year, m] = month.split('-').map(Number);
@@ -44,6 +47,8 @@ router.get('/', async (req, res) => {
     const spentByCategory = await Record.aggregate([
       {
         $match: {
+          // aggregate() skips Mongoose casting — convert to ObjectId explicitly
+          userId: new mongoose.Types.ObjectId(req.user.id),
           type: 'expense',
           date: { $gte: start, $lt: end }
         }
@@ -84,8 +89,9 @@ router.put('/:id', async (req, res) => {
       return res.status(400).json({ error: 'Budget amount must be greater than 0' });
     }
 
-    const budget = await Budget.findByIdAndUpdate(
-      req.params.id,
+    // Scoped by userId — a user can only update their own budgets.
+    const budget = await Budget.findOneAndUpdate(
+      { _id: req.params.id, userId: req.user.id },
       { budgetAmount },
       { new: true, runValidators: true }
     );
@@ -102,7 +108,9 @@ router.put('/:id', async (req, res) => {
 // Delete budget
 router.delete('/:id', async (req, res) => {
   try {
-    const budget = await Budget.findByIdAndDelete(req.params.id);
+    const budget = await Budget.findOneAndDelete({
+      _id: req.params.id, userId: req.user.id
+    });
     if (!budget) {
       return res.status(404).json({ error: 'Budget not found' });
     }
