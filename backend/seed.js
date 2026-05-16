@@ -1,9 +1,21 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
+const User = require('./models/User');
 const Record = require('./models/Record');
 const Budget = require('./models/Budget');
+const Goal = require('./models/Goal');
 
 const MONTH = '2026-04';
+
+// A ready-to-use demo account so the app has data on first run
+// (and reviewers can log straight in).
+const DEMO_USER = {
+  email: 'demo@ispent.app',
+  password: 'demo1234',
+  name: 'Demo User',
+  role: 'user'
+};
 
 const records = [
   { type: 'expense', category: 'food', amount: 12.50, note: 'lunch', date: '2026-04-01' },
@@ -41,20 +53,47 @@ const budgets = [
   { category: 'housing', budgetAmount: 1400, month: MONTH },
 ];
 
+// One of each goal type so all three card shapes render on first run.
+const goals = [
+  {
+    type: 'savings', icon: '🛫', title: 'Japan Trip 2026', category: 'Travel',
+    targetAmount: 5000, currentAmount: 3000, deadline: '2026-12-01'
+  },
+  {
+    type: 'spending_limit', icon: '🍱', title: 'Eating Out', category: 'Food',
+    targetAmount: 400, limitCategory: 'food', period: 'monthly'
+  },
+  {
+    type: 'simple_todo', icon: '📊', title: 'Research one ETF before tax season',
+    category: 'Investing', done: false
+  },
+];
+
 async function seed() {
   try {
     await mongoose.connect(process.env.MONGODB_URI);
     console.log('Connected to MongoDB');
 
+    await User.deleteMany({});
     await Record.deleteMany({});
     await Budget.deleteMany({});
+    await Goal.deleteMany({});
     console.log('Cleared existing data');
 
-    await Record.insertMany(records);
+    const hash = await bcrypt.hash(DEMO_USER.password, 10);
+    const user = await User.create({ ...DEMO_USER, password: hash });
+    console.log(`Created demo user: ${user.email} / ${DEMO_USER.password}`);
+
+    const withUser = (rows) => rows.map((r) => ({ ...r, userId: user._id }));
+
+    await Record.insertMany(withUser(records));
     console.log(`Inserted ${records.length} records`);
 
-    await Budget.insertMany(budgets);
+    await Budget.insertMany(withUser(budgets));
     console.log(`Inserted ${budgets.length} budgets`);
+
+    await Goal.insertMany(withUser(goals));
+    console.log(`Inserted ${goals.length} goals`);
 
     console.log('Seed complete!');
     process.exit(0);
