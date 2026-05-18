@@ -92,13 +92,19 @@ cd backend
 npm install
 ```
 
-Create a `.env` file in the `backend/` folder:
+Create the `.env` file by copying the provided template, then fill in the values:
+
+```bash
+cp .env.example .env
+```
 
 ```
-MONGODB_URI=mongodb://localhost:27017/ispent
-PORT=3001
+MONGODB_URI=mongodb://localhost:27017/ispent-a2
 JWT_SECRET=replace-with-a-long-random-string
+PORT=3001
 ```
+
+> No third-party API keys are needed — iSpent is fully self-hosted (local password hashing + JWT + local MongoDB). `JWT_SECRET` is any long random string you choose, e.g. `openssl rand -hex 32`.
 
 Seed sample data (creates demo + admin accounts) and start the server:
 
