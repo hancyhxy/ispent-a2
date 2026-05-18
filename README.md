@@ -2,9 +2,11 @@
   <img src="screenshots/00-banner.png" alt="iSpent Banner" width="100%" />
 </p>
 
-# iSpent — Goal-Driven Personal Expense Tracker
+# iSpent 2.0 — Goal-Driven Personal Finance Tracker
 
 A modern, single-page finance tracker that turns daily bookkeeping into an effortless habit. iSpent pairs frictionless transaction logging with a goal-driven board, so every entry visibly moves the user toward a savings target, a spending limit, or a financial to-do.
+
+> **iSpent 2.0** is a substantial evolution of the Assignment 1 expense tracker — not "A1 plus a login screen". A1 was a single-user ledger; 2.0 is a multi-user, goal-driven finance platform with authentication, role-based administration, an audit log, live search, and a themeable interface. See [From A1 to 2.0](#from-a1-to-20--what-changed) for the full delta.
 
 <p align="center">
   <img src="screenshots/flow.png" alt="iSpent App Flow" width="100%" />
@@ -24,6 +26,22 @@ iSpent attacks both halves of that problem:
 - **A reason to come back** — every record feeds a **Goal** card (savings / spending-limit / financial to-do), so the user always sees forward momentum, not just a static balance.
 
 It is a multi-user web app: each account's data is fully isolated, and an **admin** role can manage all accounts and review a cross-user activity log.
+
+## From A1 to 2.0 — What Changed
+
+Assignment 1's iSpent was a single-user expense ledger. Version 2.0 re-architects it into a multi-user, goal-driven finance platform. The change is structural, not cosmetic:
+
+| Aspect | A1 (single-user ledger) | iSpent 2.0 (this submission) |
+|--------|-------------------------|------------------------------|
+| Users | None — one shared dataset | **Multi-user**: register/login, JWT, bcrypt-hashed passwords, every query scoped by `userId` (IDOR-safe) |
+| Budgets | A flat monthly number per category | **Goal entity** with three card types — `savings`, `spending_limit`, `simple_todo` |
+| Finding data | No search | **Live search** filtering records and goals as you type |
+| Administration | — | **Admin role**: manage all accounts, change roles, cascade-delete users, review an audit log |
+| Auditability | — | **`user_activity`** entity: append-only log of logins, logouts, and every CRUD action |
+| Entities under CRUD | 2 | **4** (user / record / goal / user_activity) |
+| Interface | Light only | **Light + dark theme**, persisted, with a responsive Me/account area |
+
+> The product thesis also matured: A1 answered *"how much did I spend?"*; 2.0 answers *"am I moving toward what I set out to do?"* — the goal board turns logging from a chore into visible progress.
 
 ## Tech Stack
 
