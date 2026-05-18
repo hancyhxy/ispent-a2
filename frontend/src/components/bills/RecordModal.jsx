@@ -93,7 +93,7 @@ export default function RecordModal({ isOpen, onClose, record, onSave, onSaveAnd
           {!isEdit && (
             <button
               onClick={handleSaveAndAnother}
-              className="flex-1 md:flex-none py-3 md:px-6 rounded-2xl bg-surface hover:bg-gray-200
+              className="flex-1 md:flex-none py-3 md:px-6 rounded-2xl bg-surface hover:bg-[var(--c-hover)]
                 text-sm font-semibold text-text-secondary transition-colors"
             >
               Save & Add Another
@@ -116,7 +116,7 @@ export default function RecordModal({ isOpen, onClose, record, onSave, onSaveAnd
             key={t}
             onClick={() => { setType(t); setCategory(''); }}
             className={`flex-1 py-2.5 rounded-xl text-sm font-semibold transition-colors
-              ${type === t ? 'bg-primary text-white' : 'bg-surface text-text-secondary hover:bg-gray-200'}`}
+              ${type === t ? 'bg-primary text-white' : 'bg-surface text-text-secondary hover:bg-[var(--c-hover)]'}`}
           >
             {t === 'expense' ? 'Expense' : 'Income'}
           </button>
@@ -134,7 +134,7 @@ export default function RecordModal({ isOpen, onClose, record, onSave, onSaveAnd
               className={`flex flex-col items-center gap-1 py-3 rounded-xl transition-colors focus:outline-none
                 ${category === cat.key
                   ? 'bg-primary/10 ring-2 ring-primary'
-                  : 'bg-surface hover:bg-gray-100'}`}
+                  : 'bg-surface hover:bg-[var(--c-hover)]'}`}
             >
               <span className="text-xl">{cat.icon}</span>
               <span className="text-[11px] font-medium text-text-secondary">{cat.name}</span>
@@ -181,7 +181,7 @@ export default function RecordModal({ isOpen, onClose, record, onSave, onSaveAnd
                 key={tag}
                 onClick={() => setNote(tag)}
                 className="px-4 py-2 rounded-full bg-surface text-sm font-medium
-                  text-text-secondary hover:bg-gray-200 transition-colors"
+                  text-text-secondary hover:bg-[var(--c-hover)] transition-colors"
               >
                 {tag}
               </button>
@@ -189,7 +189,7 @@ export default function RecordModal({ isOpen, onClose, record, onSave, onSaveAnd
             <button
               onClick={() => setShowTagManager(true)}
               className="flex items-center justify-center w-9 h-9 rounded-full
-                bg-surface hover:bg-gray-200 text-text-muted transition-colors"
+                bg-surface hover:bg-[var(--c-hover)] text-text-muted transition-colors"
               aria-label="Manage quick notes"
             >
               <Settings size={16} />

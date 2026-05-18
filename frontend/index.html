@@ -8,6 +8,24 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <title>iSpent</title>
+    <!--
+      Apply the theme before first paint to avoid a flash of the wrong
+      theme (FOUC). This must be an inline, render-blocking script in
+      <head>: by the time React mounts, the page has already been
+      painted at least once. Stored choice wins; otherwise follow the OS.
+    -->
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem('ispent_theme');
+          var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          var theme = stored || (prefersDark ? 'dark' : 'light');
+          document.documentElement.setAttribute('data-theme', theme);
+        } catch (e) {
+          document.documentElement.setAttribute('data-theme', 'light');
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

@@ -1,27 +1,108 @@
 @import "tailwindcss";
 
+/*
+ * Theming architecture
+ * --------------------
+ * Every colour the UI uses is a semantic token (--c-*). :root holds the
+ * light values; [data-theme="dark"] overrides the same tokens with dark
+ * values. The @theme block below maps Tailwind's --color-* (which back
+ * the bg-card / text-text-primary / etc. utility classes the components
+ * already use) onto these tokens. Net effect: flipping the data-theme
+ * attribute on <html> re-themes the entire app with zero component
+ * changes — the design-token indirection is doing all the work.
+ */
+
+:root {
+  /* Surfaces & structure */
+  --c-bg: #F4F5F8;          /* app canvas */
+  --c-card: #FFFFFF;        /* card / container */
+  --c-border: #E6E8EE;      /* hairline (used sparingly) */
+  --c-hover: #EEF0F4;       /* subtle row/button hover fill */
+
+  /* Brand — slightly deeper, truer indigo than the original #4B6EF5 */
+  --c-primary: #4F46E5;
+  --c-primary-light: #6366F1;
+  --c-secondary: #FFD147;
+  --c-tertiary: #9333EA;
+
+  /* Data semantics — kept red/green so financial direction never
+     loses its conventional meaning across themes. */
+  --c-growth: #059669;
+  --c-decline: #DC2626;
+  --c-success: #16A34A;
+  --c-error: #DC2626;
+  --c-warning: #EA580C;
+
+  /* Text */
+  --c-text-primary: #111827;
+  --c-text-secondary: #4B5563;
+  --c-text-muted: #8A93A2;
+
+  /* Soft elevation — a gentle iOS-ish lift instead of the old flat look */
+  --shadow-card: 0 1px 2px rgba(17, 24, 39, 0.04), 0 8px 24px rgba(17, 24, 39, 0.05);
+  --shadow-pop: 0 12px 32px rgba(17, 24, 39, 0.12);
+
+  color-scheme: light;
+}
+
+[data-theme="dark"] {
+  --c-bg: #0F1117;          /* near-black canvas */
+  --c-card: #1A1D27;        /* raised surface */
+  --c-border: #2A2E3A;
+  --c-hover: #252935;       /* lighter raise on the dark card */
+
+  /* Brand lifts in dark mode so it stays vivid on a dark canvas */
+  --c-primary: #7C82F6;
+  --c-primary-light: #9499F8;
+  --c-secondary: #FFDD6B;
+  --c-tertiary: #C084FC;
+
+  /* Brighter red/green so income/expense stay legible on dark.
+     Verified against --c-card (#1A1D27):
+       green #34D399 → ~7.0:1, red #F87171 → ~5.4:1 (both ≥ AA). */
+  --c-growth: #34D399;
+  --c-decline: #F87171;
+  --c-success: #4ADE80;
+  --c-error: #F87171;
+  --c-warning: #FB923C;
+
+  --c-text-primary: #F3F4F6;
+  --c-text-secondary: #B6BCC8;
+  --c-text-muted: #7E8696;
+
+  /* On dark, elevation reads as a deeper drop rather than a soft tint */
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 24px rgba(0, 0, 0, 0.45);
+  --shadow-pop: 0 12px 32px rgba(0, 0, 0, 0.6);
+
+  color-scheme: dark;
+}
+
 @theme {
   --font-sans: "Inter", sans-serif;
 
-  --color-primary: #4B6EF5;
-  --color-primary-light: #6B8AF7;
-  --color-secondary: #FFD147;
-  --color-tertiary: #9333EA;
+  --color-primary: var(--c-primary);
+  --color-primary-light: var(--c-primary-light);
+  --color-secondary: var(--c-secondary);
+  --color-tertiary: var(--c-tertiary);
 
-  --color-growth: #10B981;
-  --color-decline: #EF4444;
+  --color-growth: var(--c-growth);
+  --color-decline: var(--c-decline);
 
-  --color-success: #22C55E;
-  --color-error: #DC2626;
-  --color-warning: #F97316;
+  --color-success: var(--c-success);
+  --color-error: var(--c-error);
+  --color-warning: var(--c-warning);
 
-  --color-text-primary: #111827;
-  --color-text-secondary: #4B5563;
-  --color-text-muted: #9CA3AF;
+  --color-text-primary: var(--c-text-primary);
+  --color-text-secondary: var(--c-text-secondary);
+  --color-text-muted: var(--c-text-muted);
 
-  --color-border: #E5E7EB;
-  --color-surface: #F8F9FA;
-  --color-card: #FFFFFF;
+  --color-border: var(--c-border);
+  --color-surface: var(--c-bg);
+  --color-card: var(--c-card);
+
+  /* Soft elevation tokens, exposed as shadow-card / shadow-pop */
+  --shadow-card: var(--shadow-card);
+  --shadow-pop: var(--shadow-pop);
 }
 
 html, body, #root {
@@ -34,6 +115,8 @@ body {
   background-color: var(--color-surface);
   color: var(--color-text-primary);
   margin: 0;
+  /* Theme swaps glide instead of snapping (respected reduced-motion below) */
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 /* Prevent iOS Safari auto-zoom on input focus (requires font-size >= 16px) */

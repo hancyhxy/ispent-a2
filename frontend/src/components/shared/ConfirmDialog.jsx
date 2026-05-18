@@ -16,7 +16,7 @@ export default function ConfirmDialog({ isOpen, onClose, onConfirm, title, messa
           ref={cancelRef}
           onClick={onClose}
           className="px-6 py-3 rounded-2xl text-sm font-semibold text-text-secondary
-            bg-surface hover:bg-gray-200 transition-colors"
+            bg-surface hover:bg-[var(--c-hover)] transition-colors"
         >
           Cancel
         </button>

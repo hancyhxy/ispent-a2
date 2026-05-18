@@ -110,8 +110,8 @@ export default function BillsPage({ selectedMonth }) {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search by note or category..."
-          className="w-full pl-9 pr-3 py-2.5 rounded-2xl bg-white border border-gray-200
-            text-sm placeholder:text-text-muted focus:outline-none focus:border-primary
+          className="w-full pl-9 pr-3 py-2.5 rounded-2xl bg-card border border-border
+            text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:border-primary
             transition-colors"
         />
       </div>

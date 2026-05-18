@@ -54,7 +54,7 @@ export default function Modal({ isOpen, onClose, title, footer, children }) {
             <button
               onClick={onClose}
               className="md:hidden flex items-center justify-center w-8 h-8 rounded-full
-                hover:bg-gray-100 text-text-muted transition-colors focus:outline-none"
+                hover:bg-[var(--c-hover)] text-text-muted transition-colors focus:outline-none"
               aria-label="Close"
             >
               <X size={20} />

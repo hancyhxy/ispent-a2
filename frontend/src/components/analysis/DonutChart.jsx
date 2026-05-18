@@ -20,7 +20,7 @@ export default function DonutChart({ data, total, type, onTypeChange }) {
             key={t}
             onClick={() => onTypeChange(t)}
             className={`px-4 py-2 rounded-xl text-xs font-semibold transition-colors
-              ${type === t ? 'bg-primary text-white' : 'bg-surface text-text-secondary hover:bg-gray-200'}`}
+              ${type === t ? 'bg-primary text-white' : 'bg-surface text-text-secondary hover:bg-[var(--c-hover)]'}`}
           >
             {t === 'expense' ? 'Expense' : 'Income'}
           </button>

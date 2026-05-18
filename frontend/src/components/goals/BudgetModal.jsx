@@ -104,7 +104,7 @@ export default function BudgetModal({ isOpen, onClose, budget, onSave, onDelete,
                       ? 'opacity-30 cursor-not-allowed bg-surface'
                       : category === cat.key
                         ? 'bg-primary/10 ring-2 ring-primary'
-                        : 'bg-surface hover:bg-gray-100'}`}
+                        : 'bg-surface hover:bg-[var(--c-hover)]'}`}
                 >
                   <span className="text-xl">{cat.icon}</span>
                   <span className="text-[11px] font-medium text-text-secondary">{cat.name}</span>

@@ -13,7 +13,7 @@ export default function BudgetCard({ budget, onClick }) {
   return (
     <button
       onClick={onClick}
-      className="w-full bg-card rounded-3xl p-6 text-left hover:bg-gray-50 transition-colors"
+      className="w-full bg-card rounded-3xl p-6 text-left hover:bg-[var(--c-hover)] transition-colors"
     >
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-3">

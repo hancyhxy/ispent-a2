@@ -42,7 +42,7 @@ export default function QuickNoteManager({ isOpen, onClose, category, tags, onAd
             <button
               onClick={() => onRemove(category, tag)}
               className="flex items-center justify-center w-5 h-5 rounded-full
-                hover:bg-gray-300 transition-colors"
+                hover:bg-[var(--c-hover)] transition-colors"
               aria-label={`Remove ${tag}`}
             >
               <X size={12} />

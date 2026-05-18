@@ -9,7 +9,7 @@ export default function RecordItem({ record, onClick }) {
     <button
       onClick={onClick}
       className="w-full flex items-center gap-3 p-4 bg-card rounded-2xl
-        hover:bg-gray-50 transition-colors text-left"
+        hover:bg-[var(--c-hover)] transition-colors text-left"
     >
       <span className="text-2xl w-10 h-10 flex items-center justify-center shrink-0">
         {cat.icon}
