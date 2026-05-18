@@ -1,3 +1,4 @@
+/* Author: Xinyi */
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ReferenceLine, ResponsiveContainer } from 'recharts';
 import { formatCurrency } from '../../utils/helpers';
 

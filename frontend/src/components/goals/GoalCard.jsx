@@ -1,3 +1,4 @@
+/* Author: Xinyi */
 import { useState } from 'react';
 import { Plus, MoreHorizontal, Check, Sparkles, Trash2, X } from 'lucide-react';
 import { formatCurrency } from '../../utils/helpers';

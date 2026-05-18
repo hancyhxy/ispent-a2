@@ -1,3 +1,4 @@
+/* Author: Xinyi */
 import Modal from './Modal';
 import { useRef, useEffect } from 'react';
 

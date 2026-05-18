@@ -1,3 +1,4 @@
+/* Author: Xinyi */
 import { LogOut, Sun, Moon, Shield } from 'lucide-react';
 import useTheme from '../../hooks/useTheme';
 

@@ -1,3 +1,4 @@
+/* Author: Xinyi */
 import { formatCurrency } from '../../utils/helpers';
 
 const cards = [

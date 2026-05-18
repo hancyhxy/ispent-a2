@@ -1,3 +1,4 @@
+/* Author: Xinyi */
 const mongoose = require('mongoose');
 
 const budgetSchema = new mongoose.Schema({

@@ -1,3 +1,4 @@
+/* Author: Xinyi */
 export const EXPENSE_CATEGORIES = [
   { key: 'food', name: 'Food', icon: '🍕' },
   { key: 'shopping', name: 'Shopping', icon: '🛒' },

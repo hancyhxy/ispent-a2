@@ -1,3 +1,4 @@
+/* Author: Xinyi */
 import { useState, useEffect, useRef } from 'react';
 import { Settings } from 'lucide-react';
 import Modal from '../shared/Modal';

@@ -1,3 +1,4 @@
+/* Author: Xinyi */
 import { useState, useEffect, useCallback } from 'react';
 import { apiCheckEmail, apiRegister, apiLogin, apiLogout, apiMe, setToken, clearToken, getToken } from '../services/api';
 import { showToast } from '../components/shared/Toast';

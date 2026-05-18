@@ -1,3 +1,4 @@
+/* Author: Xinyi */
 import { useState } from 'react';
 
 // Email-first auth flow (Google / Notion style):

@@ -1,3 +1,4 @@
+/* Author: Xinyi */
 import MonthPicker from '../shared/MonthPicker';
 import { getGreeting, formatDate, getTodayString } from '../../utils/helpers';
 

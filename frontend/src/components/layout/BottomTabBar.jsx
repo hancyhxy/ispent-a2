@@ -1,3 +1,4 @@
+/* Author: Xinyi */
 import { Receipt, BarChart3, Target, Shield, User } from 'lucide-react';
 
 const BASE_NAV = [

@@ -1,3 +1,4 @@
+/* Author: Xinyi */
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { formatMonthDisplay, getPrevMonth, getNextMonth, getCurrentMonth } from '../../utils/helpers';
 

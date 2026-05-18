@@ -1,3 +1,4 @@
+/* Author: Xinyi */
 import { Receipt, BarChart3, Target, Shield, Sun, Moon, LogOut } from 'lucide-react';
 import useTheme from '../../hooks/useTheme';
 

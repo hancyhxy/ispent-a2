@@ -1,3 +1,4 @@
+/* Author: Xinyi */
 const BASE_URL = '/api';
 const TOKEN_KEY = 'ispent_token';
 

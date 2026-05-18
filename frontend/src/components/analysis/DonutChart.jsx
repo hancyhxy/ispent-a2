@@ -1,3 +1,4 @@
+/* Author: Xinyi */
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
 import { CHART_COLORS, CATEGORY_MAP } from '../../constants/categories';
 import { formatCurrency } from '../../utils/helpers';

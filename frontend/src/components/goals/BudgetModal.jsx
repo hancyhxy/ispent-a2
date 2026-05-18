@@ -1,3 +1,4 @@
+/* Author: Xinyi */
 import { useState, useEffect, useRef } from 'react';
 import Modal from '../shared/Modal';
 import { EXPENSE_CATEGORIES, CATEGORY_MAP } from '../../constants/categories';

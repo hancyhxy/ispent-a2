@@ -1,3 +1,4 @@
+/* Author: Xinyi */
 import { CATEGORY_MAP } from '../../constants/categories';
 import { formatCurrency } from '../../utils/helpers';
 

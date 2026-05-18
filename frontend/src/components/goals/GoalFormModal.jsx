@@ -1,3 +1,4 @@
+/* Author: Xinyi */
 import { useState, useEffect } from 'react';
 import Modal from '../shared/Modal';
 

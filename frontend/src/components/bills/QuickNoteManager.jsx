@@ -1,3 +1,4 @@
+/* Author: Xinyi */
 import { useState, useRef, useEffect } from 'react';
 import { X, Plus } from 'lucide-react';
 import Modal from '../shared/Modal';

@@ -1,3 +1,4 @@
+/* Author: Xinyi */
 import RecordItem from './RecordItem';
 import EmptyState from '../shared/EmptyState';
 import { formatDate, formatCurrency } from '../../utils/helpers';

@@ -1,3 +1,4 @@
+/* Author: Xinyi */
 import { useState, useCallback } from 'react';
 
 const STORAGE_KEY = 'ispent_quick_notes';
