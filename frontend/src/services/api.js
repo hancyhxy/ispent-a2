@@ -13,8 +13,28 @@ async function request(method, path, body) {
   const options = { method, headers };
   if (body) options.body = JSON.stringify(body);
 
-  const res = await fetch(`${BASE_URL}${path}`, options);
-  const data = await res.json();
+  // Network-layer failures (offline, DNS, server down) reject here before
+  // we ever see a response, so surface a human-readable message instead of
+  // a raw "Failed to fetch".
+  let res;
+  try {
+    res = await fetch(`${BASE_URL}${path}`, options);
+  } catch {
+    throw new Error('Network error — please check your connection and try again');
+  }
+
+  // Read the body as text first: a 204, an empty body, or a non-JSON error
+  // page (e.g. a 502 HTML page from a proxy) would make res.json() throw and
+  // mask the real failure. Parse defensively only if there is content.
+  const raw = await res.text();
+  let data = {};
+  if (raw) {
+    try {
+      data = JSON.parse(raw);
+    } catch {
+      data = { error: raw };
+    }
+  }
 
   if (!res.ok) {
     // An expired/invalid token on a protected route: drop the stale
@@ -24,7 +44,7 @@ async function request(method, path, body) {
       clearToken();
       window.location.reload();
     }
-    throw new Error(data.error || 'Something went wrong');
+    throw new Error(data.error || `Request failed (${res.status})`);
   }
   return data;
 }

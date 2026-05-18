@@ -3,9 +3,14 @@ const mongoose = require('mongoose');
 const router = express.Router();
 const Record = require('../models/Record');
 
+// Record.date is stored as a "YYYY-MM-DD" string, so lexicographic order
+// equals chronological order. We therefore build string boundaries and use
+// a half-open range [start, end) — `$gte start, $lt end` — which avoids any
+// timezone math and naturally excludes the first day of next month.
 function getMonthRange(month) {
   const [year, m] = month.split('-').map(Number);
   const start = `${month}-01`;
+  // Roll over to next year when the month is December (m === 12).
   const nextMonth = m === 12 ? `${year + 1}-01` : `${year}-${String(m + 1).padStart(2, '0')}`;
   const end = `${nextMonth}-01`;
   return { start, end };
@@ -24,6 +29,10 @@ router.get('/monthly', async (req, res) => {
     const result = await Record.aggregate([
       {
         $match: {
+          // aggregate() bypasses Mongoose's schema casting, so req.user.id
+          // (a string) will NOT match the ObjectId-typed userId field and
+          // the pipeline silently returns []. The explicit ObjectId cast is
+          // load-bearing — do not "simplify" it away.
           userId: new mongoose.Types.ObjectId(req.user.id),
           date: { $gte: start, $lt: end }
         }
@@ -71,6 +80,8 @@ router.get('/categories', async (req, res) => {
     const result = await Record.aggregate([
       {
         $match: {
+          // See /monthly above: aggregate() needs the explicit ObjectId
+          // cast or this match silently returns no rows.
           userId: new mongoose.Types.ObjectId(req.user.id),
           type,
           date: { $gte: start, $lt: end }
@@ -114,6 +125,8 @@ router.get('/daily', async (req, res) => {
     const result = await Record.aggregate([
       {
         $match: {
+          // See /monthly above: aggregate() needs the explicit ObjectId
+          // cast or this match silently returns no rows.
           userId: new mongoose.Types.ObjectId(req.user.id),
           type: 'expense',
           date: { $gte: start, $lt: end }
@@ -138,6 +151,10 @@ router.get('/daily', async (req, res) => {
     }
 
     const totalExpense = daily.reduce((sum, d) => sum + d.amount, 0);
+    // Daily average divides by elapsed days, not calendar days: for the
+    // current month we use today's date so the average isn't diluted by the
+    // remaining (zero-spend) days of the month; past months use their full
+    // length. Without this the "current month" average always looks too low.
     const now = new Date();
     const isCurrentMonth = now.getFullYear() === year && now.getMonth() + 1 === m;
     const elapsedDays = isCurrentMonth ? now.getDate() : daysInMonth;

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Sidebar from './components/layout/Sidebar';
 import Header from './components/layout/Header';
 import BottomTabBar from './components/layout/BottomTabBar';
@@ -6,7 +6,6 @@ import ToastContainer from './components/shared/Toast';
 import BillsPage from './components/bills/BillsPage';
 import AnalysisPage from './components/analysis/AnalysisPage';
 import GoalsPage from './components/goals/GoalsPage';
-import MockGoalsPage from './components/goals/mock/MockGoalsPage';
 import AuthPage from './components/auth/AuthPage';
 import useAuth from './hooks/useAuth';
 import { getCurrentMonth } from './utils/helpers';
@@ -15,24 +14,6 @@ export default function App() {
   const { user, loading, checkEmail, login, register, logout } = useAuth();
   const [currentPage, setCurrentPage] = useState('bills');
   const [selectedMonth, setSelectedMonth] = useState(getCurrentMonth());
-
-  // A2 design-mock route — visit /#mock to preview the new Goals page.
-  const [isMock, setIsMock] = useState(() => window.location.hash === '#mock');
-  useEffect(() => {
-    const onHashChange = () => setIsMock(window.location.hash === '#mock');
-    window.addEventListener('hashchange', onHashChange);
-    return () => window.removeEventListener('hashchange', onHashChange);
-  }, []);
-
-  if (isMock) {
-    return (
-      <div className="h-screen overflow-y-auto bg-surface">
-        <div className="px-4 lg:px-8 py-6">
-          <MockGoalsPage />
-        </div>
-      </div>
-    );
-  }
 
   // Auth gate
   if (loading) {

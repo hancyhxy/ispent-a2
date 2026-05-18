@@ -23,12 +23,25 @@ function loadTags() {
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored) return JSON.parse(stored);
-  } catch {}
+  } catch {
+    // Corrupted/legacy localStorage payload (manual edit, old format,
+    // private-mode quota error). Quick-note tags are a convenience layer,
+    // not core data — silently falling back to defaults is the correct
+    // recovery here, so we intentionally swallow this and don't alarm the user.
+  }
   return { ...DEFAULT_TAGS };
 }
 
 function saveTags(tags) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(tags));
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(tags));
+  } catch {
+    // setItem can throw on a full quota or in Safari private mode. This runs
+    // inside a state updater, so an uncaught throw would break the render.
+    // Tags persist best-effort: the in-memory state still updates this
+    // session, we just can't carry it to the next one — acceptable for a
+    // convenience feature, so we don't surface an error.
+  }
 }
 
 export default function useQuickNotes() {

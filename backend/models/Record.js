@@ -25,6 +25,10 @@ const recordSchema = new mongoose.Schema({
     type: String,
     default: ''
   },
+  // Stored as a "YYYY-MM-DD" string, NOT a Date, on purpose: the stats
+  // aggregations rely on lexicographic === chronological ordering for fast
+  // half-open range matching with no timezone math (see routes/stats.js).
+  // Changing this to Date would break every stats range query.
   date: {
     type: String,
     required: true
