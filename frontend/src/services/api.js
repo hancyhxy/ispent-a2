@@ -53,6 +53,7 @@ async function request(method, path, body) {
 export const apiCheckEmail = (email) => request('POST', '/auth/check-email', { email });
 export const apiRegister = (data) => request('POST', '/auth/register', data);
 export const apiLogin = (data) => request('POST', '/auth/login', data);
+export const apiLogout = () => request('POST', '/auth/logout');
 export const apiMe = () => request('GET', '/auth/me');
 
 // Records
@@ -77,3 +78,11 @@ export const fetchGoals = () => request('GET', '/goals');
 export const createGoal = (data) => request('POST', '/goals', data);
 export const updateGoal = (id, data) => request('PUT', `/goals/${id}`, data);
 export const deleteGoal = (id) => request('DELETE', `/goals/${id}`);
+
+// Admin (fourth entity — user_activity — plus user management).
+// All of these hit admin-only routes; a non-admin token gets 403.
+export const fetchAdminUsers = () => request('GET', '/admin/users');
+export const updateUserRole = (id, role) => request('PUT', `/admin/users/${id}/role`, { role });
+export const deleteUser = (id) => request('DELETE', `/admin/users/${id}`);
+export const fetchActivities = (userId) =>
+  request('GET', userId ? `/admin/activities?userId=${userId}` : '/admin/activities');

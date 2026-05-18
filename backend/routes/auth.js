@@ -3,6 +3,7 @@ const router = express.Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const { logActivity } = require('../models/UserActivity');
 const { requireAuth } = require('../middleware/auth');
 
 const TOKEN_TTL = '7d';
@@ -78,9 +79,31 @@ router.post('/login', async (req, res) => {
       return res.status(401).json({ error: 'Invalid email or password' });
     }
 
+    logActivity({ userId: user._id, userEmail: user.email, action: 'login', entity: 'auth' });
     res.json({ token: signToken(user), user: publicUser(user) });
   } catch (err) {
     res.status(500).json({ error: 'Failed to log in' });
+  }
+});
+
+// Logout. With stateless JWT the client simply discards its token, so
+// there is nothing to invalidate server-side. This endpoint exists only
+// so the logout event is captured in the activity log for the admin view
+// (rubric requires logging "login/logout and CRUD operations").
+router.post('/logout', requireAuth, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    logActivity({
+      userId: req.user.id,
+      userEmail: user ? user.email : '',
+      action: 'logout',
+      entity: 'auth'
+    });
+    res.json({ message: 'Logged out' });
+  } catch (err) {
+    // Logout must always succeed from the client's point of view —
+    // even if we can't write the log, the token is already gone.
+    res.json({ message: 'Logged out' });
   }
 });
 

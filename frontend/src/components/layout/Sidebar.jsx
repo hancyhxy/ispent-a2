@@ -1,12 +1,20 @@
-import { Receipt, BarChart3, Target } from 'lucide-react';
+import { Receipt, BarChart3, Target, Shield } from 'lucide-react';
 
-const NAV_ITEMS = [
+const BASE_NAV = [
   { key: 'bills', label: 'Bills', icon: Receipt },
   { key: 'analysis', label: 'Analysis', icon: BarChart3 },
   { key: 'goals', label: 'Goals', icon: Target },
 ];
 
-export default function Sidebar({ currentPage, onNavigate }) {
+// Appended only for admins (see below). Kept at module scope so the JSX
+// usage of its `icon` is resolved the same way as BASE_NAV's.
+const ADMIN_NAV_ITEM = { key: 'admin', label: 'Admin', icon: Shield };
+
+// The Admin tab is appended only for admins. This is a UX concern, not a
+// security boundary — the real enforcement is requireAdmin on the server.
+export default function Sidebar({ currentPage, onNavigate, isAdmin }) {
+  const NAV_ITEMS = isAdmin ? [...BASE_NAV, ADMIN_NAV_ITEM] : BASE_NAV;
+
   return (
     <nav className="hidden md:flex flex-col h-screen sticky top-0 bg-card
       lg:w-[148px] md:w-[56px] shrink-0">
@@ -18,7 +26,9 @@ export default function Sidebar({ currentPage, onNavigate }) {
 
       {/* Nav items */}
       <div className="flex flex-col gap-1 px-2 mt-4">
-        {NAV_ITEMS.map(({ key, label, icon: Icon }) => {
+        {NAV_ITEMS.map((item) => {
+          const Icon = item.icon;
+          const { key, label } = item;
           const isActive = currentPage === key;
           return (
             <button

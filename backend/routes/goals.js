@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const router = express.Router();
 const Goal = require('../models/Goal');
 const Record = require('../models/Record');
+const { logActivity } = require('../models/UserActivity');
 
 // Resolve the [start, end) date strings for a spending_limit period,
 // anchored on today. Weekly = last 7 days; monthly = current calendar
@@ -95,6 +96,12 @@ router.post('/', async (req, res) => {
       period: type === 'spending_limit' ? (period || 'monthly') : undefined
     });
 
+    logActivity({
+      userId: req.user.id,
+      action: 'create',
+      entity: 'goal',
+      detail: `${goal.type}: ${goal.title}`
+    });
     res.status(201).json(await withProgress(goal, req.user.id));
   } catch (err) {
     res.status(500).json({ error: 'Failed to create goal' });
@@ -140,6 +147,12 @@ router.put('/:id', async (req, res) => {
     }
 
     await goal.save();
+    logActivity({
+      userId: req.user.id,
+      action: 'update',
+      entity: 'goal',
+      detail: `${goal.type}: ${goal.title}`
+    });
     res.json(await withProgress(goal, req.user.id));
   } catch (err) {
     res.status(500).json({ error: 'Failed to update goal' });
@@ -151,6 +164,12 @@ router.delete('/:id', async (req, res) => {
   try {
     const goal = await Goal.findOneAndDelete({ _id: req.params.id, userId: req.user.id });
     if (!goal) return res.status(404).json({ error: 'Goal not found' });
+    logActivity({
+      userId: req.user.id,
+      action: 'delete',
+      entity: 'goal',
+      detail: `${goal.type}: ${goal.title}`
+    });
     res.json({ message: 'Goal deleted' });
   } catch (err) {
     res.status(500).json({ error: 'Failed to delete goal' });

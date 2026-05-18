@@ -1,4 +1,9 @@
 {
+  "_comment": "Database export mirroring backend/seed.js. Passwords are shown as the plaintext seeded value; the app stores only the bcrypt hash. Run `npm run seed` to load this into MongoDB.",
+  "users": [
+    { "email": "demo@ispent.app", "name": "Demo User", "role": "user", "password": "demo1234 (stored bcrypt-hashed)" },
+    { "email": "admin@ispent.app", "name": "Admin", "role": "admin", "password": "admin1234 (stored bcrypt-hashed)" }
+  ],
   "records": [
     { "type": "expense", "category": "food", "amount": 12.50, "note": "lunch", "date": "2026-04-01" },
     { "type": "expense", "category": "transport", "amount": 4.80, "note": "bus to campus", "date": "2026-04-01" },
@@ -31,5 +36,18 @@
     { "category": "shopping", "budgetAmount": 200, "month": "2026-04" },
     { "category": "entertainment", "budgetAmount": 100, "month": "2026-04" },
     { "category": "housing", "budgetAmount": 1400, "month": "2026-04" }
+  ],
+  "goals": [
+    { "type": "savings", "icon": "🛫", "title": "Japan Trip 2026", "category": "Travel", "targetAmount": 5000, "currentAmount": 3000, "deadline": "2026-12-01" },
+    { "type": "spending_limit", "icon": "🍱", "title": "Eating Out", "category": "Food", "targetAmount": 400, "limitCategory": "food", "period": "monthly" },
+    { "type": "simple_todo", "icon": "📊", "title": "Research one ETF before tax season", "category": "Investing", "done": false }
+  ],
+  "userActivities": [
+    { "userEmail": "demo@ispent.app", "action": "login", "entity": "auth", "detail": "" },
+    { "userEmail": "demo@ispent.app", "action": "create", "entity": "record", "detail": "expense $12.50 (food)" },
+    { "userEmail": "demo@ispent.app", "action": "create", "entity": "goal", "detail": "savings: Japan Trip 2026" },
+    { "userEmail": "demo@ispent.app", "action": "update", "entity": "record", "detail": "expense $18.00 (food)" },
+    { "userEmail": "demo@ispent.app", "action": "logout", "entity": "auth", "detail": "" },
+    { "userEmail": "admin@ispent.app", "action": "login", "entity": "auth", "detail": "" }
   ]
 }

@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Record = require('../models/Record');
+const { logActivity } = require('../models/UserActivity');
 
 // Create record
 router.post('/', async (req, res) => {
@@ -19,6 +20,12 @@ router.post('/', async (req, res) => {
 
     const record = await Record.create({
       userId: req.user.id, type, category, amount, note: note || '', date
+    });
+    logActivity({
+      userId: req.user.id,
+      action: 'create',
+      entity: 'record',
+      detail: `${type} $${amount} (${category})`
     });
     res.status(201).json(record);
   } catch (err) {
@@ -70,6 +77,12 @@ router.put('/:id', async (req, res) => {
     if (!record) {
       return res.status(404).json({ error: 'Record not found' });
     }
+    logActivity({
+      userId: req.user.id,
+      action: 'update',
+      entity: 'record',
+      detail: `${record.type} $${record.amount} (${record.category})`
+    });
     res.json(record);
   } catch (err) {
     res.status(500).json({ error: 'Failed to update record' });
@@ -85,6 +98,12 @@ router.delete('/:id', async (req, res) => {
     if (!record) {
       return res.status(404).json({ error: 'Record not found' });
     }
+    logActivity({
+      userId: req.user.id,
+      action: 'delete',
+      entity: 'record',
+      detail: `${record.type} $${record.amount} (${record.category})`
+    });
     res.json({ message: 'Record deleted' });
   } catch (err) {
     res.status(500).json({ error: 'Failed to delete record' });

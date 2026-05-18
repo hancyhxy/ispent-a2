@@ -9,6 +9,7 @@ const recordsRouter = require('./routes/records');
 const budgetsRouter = require('./routes/budgets');
 const statsRouter = require('./routes/stats');
 const goalsRouter = require('./routes/goals');
+const adminRouter = require('./routes/admin');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -25,6 +26,10 @@ app.use('/api/records', requireAuth, recordsRouter);
 app.use('/api/budgets', requireAuth, budgetsRouter);
 app.use('/api/stats', requireAuth, statsRouter);
 app.use('/api/goals', requireAuth, goalsRouter);
+
+// Admin router applies requireAuth + requireAdmin internally, so it is
+// mounted without the route-level requireAuth used above.
+app.use('/api/admin', adminRouter);
 
 connectDB().then(() => {
   app.listen(PORT, () => {

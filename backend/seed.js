@@ -5,6 +5,7 @@ const User = require('./models/User');
 const Record = require('./models/Record');
 const Budget = require('./models/Budget');
 const Goal = require('./models/Goal');
+const UserActivity = require('./models/UserActivity');
 
 const MONTH = '2026-04';
 
@@ -15,6 +16,15 @@ const DEMO_USER = {
   password: 'demo1234',
   name: 'Demo User',
   role: 'user'
+};
+
+// An admin account so reviewers can log in and see the admin dashboard
+// (user management + activity log) without any manual DB editing.
+const ADMIN_USER = {
+  email: 'admin@ispent.app',
+  password: 'admin1234',
+  name: 'Admin',
+  role: 'admin'
 };
 
 const records = [
@@ -78,11 +88,16 @@ async function seed() {
     await Record.deleteMany({});
     await Budget.deleteMany({});
     await Goal.deleteMany({});
+    await UserActivity.deleteMany({});
     console.log('Cleared existing data');
 
     const hash = await bcrypt.hash(DEMO_USER.password, 10);
     const user = await User.create({ ...DEMO_USER, password: hash });
     console.log(`Created demo user: ${user.email} / ${DEMO_USER.password}`);
+
+    const adminHash = await bcrypt.hash(ADMIN_USER.password, 10);
+    const admin = await User.create({ ...ADMIN_USER, password: adminHash });
+    console.log(`Created admin user: ${admin.email} / ${ADMIN_USER.password}`);
 
     const withUser = (rows) => rows.map((r) => ({ ...r, userId: user._id }));
 
@@ -94,6 +109,22 @@ async function seed() {
 
     await Goal.insertMany(withUser(goals));
     console.log(`Inserted ${goals.length} goals`);
+
+    // A few seed activity rows so the admin dashboard has something to
+    // show on first run. Real activity accrues automatically afterwards
+    // as users log in and perform CRUD.
+    const now = Date.now();
+    const minutesAgo = (m) => new Date(now - m * 60000);
+    const activities = [
+      { userId: user._id, userEmail: user.email, action: 'login', entity: 'auth', detail: '', createdAt: minutesAgo(120) },
+      { userId: user._id, userEmail: user.email, action: 'create', entity: 'record', detail: 'expense $12.50 (food)', createdAt: minutesAgo(118) },
+      { userId: user._id, userEmail: user.email, action: 'create', entity: 'goal', detail: 'savings: Japan Trip 2026', createdAt: minutesAgo(110) },
+      { userId: user._id, userEmail: user.email, action: 'update', entity: 'record', detail: 'expense $18.00 (food)', createdAt: minutesAgo(95) },
+      { userId: user._id, userEmail: user.email, action: 'logout', entity: 'auth', detail: '', createdAt: minutesAgo(90) },
+      { userId: admin._id, userEmail: admin.email, action: 'login', entity: 'auth', detail: '', createdAt: minutesAgo(15) },
+    ];
+    await UserActivity.insertMany(activities);
+    console.log(`Inserted ${activities.length} activity log entries`);
 
     console.log('Seed complete!');
     process.exit(0);

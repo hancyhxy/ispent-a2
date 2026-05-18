@@ -1,18 +1,17 @@
 import { useState, useEffect, useCallback } from 'react';
-import { apiCheckEmail, apiRegister, apiLogin, apiMe, setToken, clearToken, getToken } from '../services/api';
+import { apiCheckEmail, apiRegister, apiLogin, apiLogout, apiMe, setToken, clearToken, getToken } from '../services/api';
 import { showToast } from '../components/shared/Toast';
 
 export default function useAuth() {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  // Lazy initial value: only "loading" if there is a token to validate.
+  // With no token there is nothing to check, so we skip the loading
+  // state entirely instead of toggling it inside the effect.
+  const [loading, setLoading] = useState(() => !!getToken());
 
   // On mount: if a token exists, validate it via /me
   useEffect(() => {
-    const token = getToken();
-    if (!token) {
-      setLoading(false);
-      return;
-    }
+    if (!getToken()) return;
     apiMe()
       .then((data) => setUser(data.user))
       .catch(() => clearToken())
@@ -55,7 +54,15 @@ export default function useAuth() {
     }
   }, []);
 
-  const logout = useCallback(() => {
+  const logout = useCallback(async () => {
+    // Tell the server first (while the token is still valid) so the
+    // logout is captured in the activity log. Fire-and-forget: if it
+    // fails the client logout must still proceed.
+    try {
+      await apiLogout();
+    } catch {
+      /* ignore — logging out locally is what matters to the user */
+    }
     clearToken();
     setUser(null);
     showToast('Signed out');

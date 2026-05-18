@@ -1,16 +1,23 @@
-import { Receipt, BarChart3, Target } from 'lucide-react';
+import { Receipt, BarChart3, Target, Shield } from 'lucide-react';
 
-const NAV_ITEMS = [
+const BASE_NAV = [
   { key: 'bills', label: 'Bills', icon: Receipt },
   { key: 'analysis', label: 'Analysis', icon: BarChart3 },
   { key: 'goals', label: 'Goals', icon: Target },
 ];
 
-export default function BottomTabBar({ currentPage, onNavigate }) {
+const ADMIN_NAV_ITEM = { key: 'admin', label: 'Admin', icon: Shield };
+
+// Admin tab shown only to admins (UX gate; server enforces real access).
+export default function BottomTabBar({ currentPage, onNavigate, isAdmin }) {
+  const NAV_ITEMS = isAdmin ? [...BASE_NAV, ADMIN_NAV_ITEM] : BASE_NAV;
+
   return (
     <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-card z-40">
       <div className="flex items-center justify-around h-14">
-        {NAV_ITEMS.map(({ key, label, icon: Icon }) => {
+        {NAV_ITEMS.map((item) => {
+          const Icon = item.icon;
+          const { key, label } = item;
           const isActive = currentPage === key;
           return (
             <button

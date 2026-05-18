@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const router = express.Router();
 const Budget = require('../models/Budget');
 const Record = require('../models/Record');
+const { logActivity } = require('../models/UserActivity');
 
 // Create budget
 router.post('/', async (req, res) => {
@@ -18,6 +19,12 @@ router.post('/', async (req, res) => {
 
     const budget = await Budget.create({
       userId: req.user.id, category, budgetAmount, month
+    });
+    logActivity({
+      userId: req.user.id,
+      action: 'create',
+      entity: 'budget',
+      detail: `${category} $${budgetAmount} (${month})`
     });
     res.status(201).json(budget);
   } catch (err) {
@@ -99,6 +106,12 @@ router.put('/:id', async (req, res) => {
     if (!budget) {
       return res.status(404).json({ error: 'Budget not found' });
     }
+    logActivity({
+      userId: req.user.id,
+      action: 'update',
+      entity: 'budget',
+      detail: `${budget.category} $${budget.budgetAmount} (${budget.month})`
+    });
     res.json(budget);
   } catch (err) {
     res.status(500).json({ error: 'Failed to update budget' });
@@ -114,6 +127,12 @@ router.delete('/:id', async (req, res) => {
     if (!budget) {
       return res.status(404).json({ error: 'Budget not found' });
     }
+    logActivity({
+      userId: req.user.id,
+      action: 'delete',
+      entity: 'budget',
+      detail: `${budget.category} $${budget.budgetAmount} (${budget.month})`
+    });
     res.json({ message: 'Budget deleted' });
   } catch (err) {
     res.status(500).json({ error: 'Failed to delete budget' });
