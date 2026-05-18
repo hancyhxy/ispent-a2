@@ -1,4 +1,4 @@
-import { Receipt, BarChart3, Target, Shield } from 'lucide-react';
+import { Receipt, BarChart3, Target, Shield, User } from 'lucide-react';
 
 const BASE_NAV = [
   { key: 'bills', label: 'Bills', icon: Receipt },
@@ -8,9 +8,17 @@ const BASE_NAV = [
 
 const ADMIN_NAV_ITEM = { key: 'admin', label: 'Admin', icon: Shield };
 
+// "Me" is always last — the conventional spot for the account tab. On
+// mobile this is the only entry point for theme/sign-out (no sidebar).
+const ACCOUNT_NAV_ITEM = { key: 'account', label: 'Me', icon: User };
+
 // Admin tab shown only to admins (UX gate; server enforces real access).
 export default function BottomTabBar({ currentPage, onNavigate, isAdmin }) {
-  const NAV_ITEMS = isAdmin ? [...BASE_NAV, ADMIN_NAV_ITEM] : BASE_NAV;
+  const NAV_ITEMS = [
+    ...BASE_NAV,
+    ...(isAdmin ? [ADMIN_NAV_ITEM] : []),
+    ACCOUNT_NAV_ITEM,
+  ];
 
   return (
     <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-card z-40">

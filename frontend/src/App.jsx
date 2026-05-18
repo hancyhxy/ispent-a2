@@ -7,6 +7,7 @@ import BillsPage from './components/bills/BillsPage';
 import AnalysisPage from './components/analysis/AnalysisPage';
 import GoalsPage from './components/goals/GoalsPage';
 import AdminPage from './components/admin/AdminPage';
+import AccountPage from './components/account/AccountPage';
 import AuthPage from './components/auth/AuthPage';
 import useAuth from './hooks/useAuth';
 import { getCurrentMonth } from './utils/helpers';
@@ -42,17 +43,24 @@ export default function App() {
 
   return (
     <div className="flex h-screen overflow-hidden bg-surface">
-      <Sidebar currentPage={activePage} onNavigate={setCurrentPage} isAdmin={isAdmin} />
+      <Sidebar currentPage={activePage} onNavigate={setCurrentPage} isAdmin={isAdmin} onLogout={logout} />
 
-      <div className="flex-1 flex flex-col h-full pb-14 md:pb-0">
+      {/* min-w-0 so the overflow constraint chain reaches <main>;
+          a flex child's default min-width:auto would otherwise let
+          inner content widen this column past the viewport. */}
+      <div className="flex-1 min-w-0 flex flex-col h-full pb-14 md:pb-0">
         <Header
           selectedMonth={selectedMonth}
           onMonthChange={setSelectedMonth}
           user={user}
-          onLogout={logout}
+          showMonthPicker={activePage !== 'account'}
         />
 
-        <main className="flex-1 min-h-0 px-4 lg:px-8 py-4 overflow-y-auto">
+        {/* min-w-0 + overflow-x-hidden: without these, an inner
+            overflow-x-auto row (e.g. the Goals filter pills) widens this
+            flex child past the viewport instead of scrolling internally,
+            pushing header actions off-screen on mobile. */}
+        <main className="flex-1 min-h-0 min-w-0 px-4 lg:px-8 py-4 overflow-y-auto overflow-x-hidden">
           {activePage === 'bills' && (
             <BillsPage selectedMonth={selectedMonth} />
           )}
@@ -64,6 +72,9 @@ export default function App() {
           )}
           {activePage === 'admin' && isAdmin && (
             <AdminPage currentUserId={user.id} />
+          )}
+          {activePage === 'account' && (
+            <AccountPage user={user} onLogout={logout} />
           )}
         </main>
       </div>
