@@ -8,7 +8,25 @@ const Budget = require('./models/Budget');
 const Goal = require('./models/Goal');
 const UserActivity = require('./models/UserActivity');
 
-const MONTH = '2026-04';
+// Anchor all seed data on the *current* month so demo data and the
+// spending-limit goals (which track the current calendar month, see
+// routes/goals.js periodRange) always line up — open the app and the
+// data, the budgets, and the limit cards are all in the same month.
+const pad = (n) => String(n).padStart(2, '0');
+const NOW = new Date();
+const THIS_Y = NOW.getFullYear();
+const THIS_M = NOW.getMonth() + 1;            // 1-based
+const MONTH = `${THIS_Y}-${pad(THIS_M)}`;     // e.g. "2026-05"
+
+// Day in the current month -> "YYYY-MM-DD" (clamped to a safe 1..28 range
+// so it is valid in every month, February included).
+const d = (day) => `${MONTH}-${pad(Math.min(day, 28))}`;
+
+// Same day, one month back — for the cross-month context rows that the
+// Analysis page uses to compare against last month.
+const PREV = new Date(THIS_Y, THIS_M - 2, 1); // THIS_M is 1-based; -2 => prev month
+const PREV_MONTH = `${PREV.getFullYear()}-${pad(PREV.getMonth() + 1)}`;
+const pd = (day) => `${PREV_MONTH}-${pad(Math.min(day, 28))}`;
 
 // A ready-to-use demo account so the app has data on first run
 // (and reviewers can log straight in).
@@ -29,31 +47,31 @@ const ADMIN_USER = {
 };
 
 const records = [
-  { type: 'expense', category: 'food', amount: 12.50, note: 'lunch', date: '2026-04-01' },
-  { type: 'expense', category: 'transport', amount: 4.80, note: 'bus to campus', date: '2026-04-01' },
-  { type: 'expense', category: 'food', amount: 18.00, note: 'dinner', date: '2026-04-01' },
-  { type: 'income', category: 'salary', amount: 2500.00, note: 'Monthly salary', date: '2026-04-01' },
-  { type: 'expense', category: 'shopping', amount: 45.99, note: 'New headphones', date: '2026-04-02' },
-  { type: 'expense', category: 'food', amount: 9.50, note: 'grocery', date: '2026-04-02' },
-  { type: 'expense', category: 'entertainment', amount: 15.00, note: 'Movie ticket', date: '2026-04-02' },
-  { type: 'expense', category: 'food', amount: 14.00, note: 'lunch', date: '2026-04-03' },
-  { type: 'expense', category: 'daily', amount: 8.90, note: 'Shampoo', date: '2026-04-03' },
-  { type: 'expense', category: 'transport', amount: 35.00, note: 'Opal top-up', date: '2026-04-03' },
-  { type: 'income', category: 'freelance', amount: 350.00, note: 'Logo design gig', date: '2026-04-03' },
-  { type: 'expense', category: 'education', amount: 29.99, note: 'Udemy course', date: '2026-04-04' },
-  { type: 'expense', category: 'food', amount: 22.00, note: 'dinner', date: '2026-04-04' },
-  { type: 'expense', category: 'health', amount: 65.00, note: 'Gym membership', date: '2026-04-05' },
-  { type: 'expense', category: 'food', amount: 11.00, note: 'lunch', date: '2026-04-05' },
-  { type: 'expense', category: 'housing', amount: 320.00, note: 'Weekly rent', date: '2026-04-06' },
-  { type: 'expense', category: 'food', amount: 55.00, note: 'grocery', date: '2026-04-06' },
-  { type: 'expense', category: 'shopping', amount: 89.00, note: 'Winter jacket', date: '2026-04-07' },
-  { type: 'income', category: 'transfer', amount: 200.00, note: 'From parents', date: '2026-04-07' },
-  { type: 'expense', category: 'food', amount: 16.50, note: 'lunch', date: '2026-04-08' },
-  { type: 'expense', category: 'entertainment', amount: 12.99, note: 'Spotify subscription', date: '2026-04-08' },
-  // March data for cross-month context
-  { type: 'expense', category: 'food', amount: 280.00, note: 'Monthly food total', date: '2026-03-15' },
-  { type: 'expense', category: 'housing', amount: 1280.00, note: 'March rent', date: '2026-03-01' },
-  { type: 'income', category: 'salary', amount: 2500.00, note: 'March salary', date: '2026-03-01' },
+  { type: 'expense', category: 'food', amount: 12.50, note: 'lunch', date: d(1) },
+  { type: 'expense', category: 'transport', amount: 4.80, note: 'bus to campus', date: d(1) },
+  { type: 'expense', category: 'food', amount: 18.00, note: 'dinner', date: d(1) },
+  { type: 'income', category: 'salary', amount: 2500.00, note: 'Monthly salary', date: d(1) },
+  { type: 'expense', category: 'shopping', amount: 45.99, note: 'New headphones', date: d(2) },
+  { type: 'expense', category: 'food', amount: 9.50, note: 'grocery', date: d(2) },
+  { type: 'expense', category: 'entertainment', amount: 15.00, note: 'Movie ticket', date: d(2) },
+  { type: 'expense', category: 'food', amount: 14.00, note: 'lunch', date: d(3) },
+  { type: 'expense', category: 'daily', amount: 8.90, note: 'Shampoo', date: d(3) },
+  { type: 'expense', category: 'transport', amount: 35.00, note: 'Opal top-up', date: d(3) },
+  { type: 'income', category: 'freelance', amount: 350.00, note: 'Logo design gig', date: d(3) },
+  { type: 'expense', category: 'education', amount: 29.99, note: 'Udemy course', date: d(4) },
+  { type: 'expense', category: 'food', amount: 22.00, note: 'dinner', date: d(4) },
+  { type: 'expense', category: 'health', amount: 65.00, note: 'Gym membership', date: d(5) },
+  { type: 'expense', category: 'food', amount: 11.00, note: 'lunch', date: d(5) },
+  { type: 'expense', category: 'housing', amount: 320.00, note: 'Weekly rent', date: d(6) },
+  { type: 'expense', category: 'food', amount: 55.00, note: 'grocery', date: d(6) },
+  { type: 'expense', category: 'shopping', amount: 89.00, note: 'Winter jacket', date: d(7) },
+  { type: 'income', category: 'transfer', amount: 200.00, note: 'From parents', date: d(7) },
+  { type: 'expense', category: 'food', amount: 16.50, note: 'lunch', date: d(8) },
+  { type: 'expense', category: 'entertainment', amount: 12.99, note: 'Spotify subscription', date: d(8) },
+  // Previous-month data for cross-month context on the Analysis page
+  { type: 'expense', category: 'food', amount: 280.00, note: 'Monthly food total', date: pd(15) },
+  { type: 'expense', category: 'housing', amount: 1280.00, note: 'Last month rent', date: pd(1) },
+  { type: 'income', category: 'salary', amount: 2500.00, note: 'Last month salary', date: pd(1) },
 ];
 
 const budgets = [
@@ -64,11 +82,16 @@ const budgets = [
   { category: 'housing', budgetAmount: 1400, month: MONTH },
 ];
 
+// Savings deadline ~6 months out from today, so the card's "N months
+// left" stays sensible no matter when the seed is run.
+const SIX_MONTHS = new Date(THIS_Y, THIS_M - 1 + 6, 1);
+const DEADLINE = `${SIX_MONTHS.getFullYear()}-${pad(SIX_MONTHS.getMonth() + 1)}-01`;
+
 // One of each goal type so all three card shapes render on first run.
 const goals = [
   {
-    type: 'savings', icon: '🛫', title: 'Japan Trip 2026', category: 'Travel',
-    targetAmount: 5000, currentAmount: 3000, deadline: '2026-12-01'
+    type: 'savings', icon: '🛫', title: `Japan Trip ${SIX_MONTHS.getFullYear()}`, category: 'Travel',
+    targetAmount: 5000, currentAmount: 3000, deadline: DEADLINE
   },
   {
     type: 'spending_limit', icon: '🍱', title: 'Eating Out', category: 'Food',

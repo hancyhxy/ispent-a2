@@ -1,6 +1,6 @@
 /* Author: Xinyi */
 import { useState } from 'react';
-import { Shield, Trash2 } from 'lucide-react';
+import { Trash2 } from 'lucide-react';
 import useAdmin from '../../hooks/useAdmin';
 import ConfirmDialog from '../shared/ConfirmDialog';
 
@@ -45,15 +45,12 @@ export default function AdminPage({ currentUserId }) {
   }
 
   return (
-    <div className="max-w-6xl mx-auto">
-      <div className="flex items-center gap-2 mb-6">
-        <Shield size={20} className="text-primary" />
-        <div>
-          <h2 className="text-xl font-semibold text-text-primary">Admin Dashboard</h2>
-          <p className="text-sm text-text-muted mt-0.5">
-            Manage accounts and review user activity across iSpent.
-          </p>
-        </div>
+    <div>
+      <div className="mb-6">
+        <h2 className="text-xl font-semibold text-text-primary">Admin Dashboard</h2>
+        <p className="text-sm text-text-muted mt-0.5">
+          Manage accounts and review user activity across iSpent.
+        </p>
       </div>
 
       {/* ---- User management ---- */}

@@ -33,6 +33,7 @@ export default function BottomTabBar({ currentPage, onNavigate, isAdmin }) {
               key={key}
               onClick={() => onNavigate(key)}
               aria-current={isActive ? 'page' : undefined}
+              data-tour={`nav-${key}`}
               className={`flex flex-col items-center gap-0.5 py-2 px-4 min-w-[64px]
                 min-h-[44px] transition-colors
                 ${isActive ? 'text-primary' : 'text-text-muted'}`}

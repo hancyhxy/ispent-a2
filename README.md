@@ -9,11 +9,11 @@ A modern, single-page finance tracker that turns daily bookkeeping into an effor
 > **iSpent 2.0** is a substantial evolution of the Assignment 1 expense tracker — not "A1 plus a login screen". A1 was a single-user ledger; 2.0 is a multi-user, goal-driven finance platform with authentication, role-based administration, an audit log, live search, and a themeable interface. See [From A1 to 2.0](#from-a1-to-20--what-changed) for the full delta.
 
 <p align="center">
-  <img src="screenshots/flow.png" alt="iSpent App Flow" width="100%" />
+  <img src="screenshots/appstore.png" alt="iSpent 2.0 — app flow across key screens" width="100%" />
 </p>
 
 <p align="center">
-  <img src="screenshots/web.gif" alt="iSpent Web Demo" width="100%" />
+  <a href="https://youtu.be/JR8B7USEm0w"><strong>▶ Watch the demo on YouTube</strong></a>
 </p>
 
 ## The Problem It Solves

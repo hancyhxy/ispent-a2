@@ -51,6 +51,7 @@ export default function Sidebar({ currentPage, onNavigate, isAdmin, onLogout }) 
               key={key}
               onClick={() => onNavigate(key)}
               aria-current={isActive ? 'page' : undefined}
+              data-tour={`nav-${key}`}
               className={`flex items-center gap-3 lg:px-4 md:px-0 md:justify-center lg:justify-start
                 py-3 rounded-2xl transition-colors text-sm font-medium focus:outline-none
                 ${isActive
@@ -70,6 +71,7 @@ export default function Sidebar({ currentPage, onNavigate, isAdmin, onLogout }) 
           onClick={toggle}
           aria-pressed={isDark}
           aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+          data-tour="theme-toggle"
           className={footerBtn}
         >
           {isDark ? <Sun size={20} /> : <Moon size={20} />}

@@ -69,7 +69,7 @@ export default function GoalsPage() {
   );
 
   return (
-    <div className="max-w-6xl mx-auto">
+    <div>
       {/* Header + action */}
       <div className="flex items-center justify-between mb-6">
         <div>
@@ -105,8 +105,10 @@ export default function GoalsPage() {
         />
       </div>
 
-      {/* Filter pills */}
-      <div className="flex items-center gap-2 mb-6 overflow-x-auto pb-1">
+      {/* Filter pills — wrap onto a second row on narrow screens instead of
+          overflowing horizontally (which showed a scrollbar and clipped the
+          last pill on mobile). */}
+      <div className="flex flex-wrap items-center gap-2 mb-6">
         {FILTERS.map(({ key, label }) => (
           <button
             key={key}

@@ -110,6 +110,21 @@ html, body, #root {
   overflow: hidden;
 }
 
+/*
+ * Hide scrollbars app-wide while keeping scroll behaviour. The visible
+ * scrollbar on long pages (e.g. Analysis) looked out of place against the
+ * rounded, app-like UI — especially on mobile. Content still scrolls; only
+ * the bar chrome is hidden. Cross-browser: WebKit/Blink via ::-webkit-scrollbar,
+ * Firefox via scrollbar-width, legacy Edge via -ms-overflow-style.
+ */
+* {
+  scrollbar-width: none;        /* Firefox */
+  -ms-overflow-style: none;     /* legacy Edge / IE */
+}
+*::-webkit-scrollbar {
+  display: none;                /* WebKit / Blink (Chrome, Safari, Edge) */
+}
+
 body {
   font-family: "Inter", sans-serif;
   background-color: var(--color-surface);

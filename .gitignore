@@ -5,3 +5,15 @@ node_modules/
 .env
 dist/
 screenshot-generator/
+
+# Remotion demo video — keep the source (src/, scripts/, public/shots) so the
+# video is reproducible, but never commit the heavy build artefacts:
+video/node_modules/
+video/out/            # rendered mp4 (multi-MB) — would bloat the repo
+video/public/audio/   # generated TTS voiceover clips (regenerate from scripts/tts.ts + Keychain key)
+
+# Banner generator export staging (already copied into screenshots/)
+pic/
+
+# Local screenshot debug/preview scratch files
+screenshots/_*.png
