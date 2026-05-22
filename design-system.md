@@ -1,4 +1,4 @@
-# iSpent — Design System
+# iSpent 2.0 — Design System
 
 > A modern, casual-feeling finance tracker that makes daily bookkeeping feel as effortless as sending a message. The interface uses emoji-based category icons, generous whitespace, and soft rounded surfaces to turn a traditionally heavy financial task into a light, everyday habit. Beneath the youthful, approachable surface sits a structured, data-precise layout — card-based dashboards, clear typographic hierarchy, and borderless depth layering — preserving the professional rigor users expect from a finance tool. Inspired by the immediacy of mobile journaling apps, adapted for a web dashboard context.
 
@@ -57,6 +57,28 @@
 
 - **CTA buttons**: Subtle linear gradient from `primary` (`#4B6EF5`) to a slightly lighter blue
 - **Floating elements**: `#FFFFFF` at 80% opacity + `backdrop-blur: 20px` frosted glass effect (for Modal overlays, Tooltips)
+
+### 2.7 Dark Theme (2.0)
+
+Every colour is a **semantic CSS custom property** (`--c-*`). `:root` holds the
+light values; `[data-theme="dark"]` overrides the *same tokens* with dark values.
+Tailwind's `--color-*` maps onto these tokens, so flipping the `data-theme`
+attribute on `<html>` re-themes the entire app with **zero component changes** —
+the token indirection does all the work. The choice is persisted to
+`localStorage` and applied before first paint (no flash of the wrong theme).
+
+| Token | Light | Dark |
+|-------|-------|------|
+| `--c-bg` (canvas) | `#F4F5F8` | `#0F1117` |
+| `--c-card` | `#FFFFFF` | `#181B23` |
+| `--c-border` | `#E6E8EE` | `#2A2E3A` |
+| `--c-text-primary` | `#111827` | `#F3F4F6` |
+| `--c-text-muted` | `#9CA3AF` | `#6B7280` |
+| `--c-primary` (brand) | `#4F46E5` | `#6366F1` |
+
+> The "no sharp corners", emoji-led, borderless-depth language carries cleanly
+> into dark mode because nothing is hard-coded — cards, charts, and the tour
+> bubble all read from the same semantic tokens.
 
 ---
 
@@ -165,13 +187,18 @@ Based on an **8px grid**, with 4px and 12px fine-tuning:
 └────────┴─────────────────────────────────────┘
 ```
 
-### 6.2 Left Sidebar Navigation
+### 6.2 Left Sidebar Navigation (desktop) → Bottom Tab Bar (mobile)
 
-- Fixed width, no divider lines
-- Top: Logo "MT"
-- 3 primary menu items: Bills / Analysis / Goals
+- Fixed width on desktop, no divider lines
+- Top: iSpent logo
+- Primary menu items: Bills / Analysis / Goals — plus a **4th "Admin" tab that
+  appears only for admin accounts** (the nav reads the user's role)
+- Sidebar footer: theme toggle + Sign out
 - **Active state**: Soft rounded background block (primary at 10% opacity) + primary color icon
 - Inactive state: `text_muted` color icon
+- **Responsive (2.0)**: below 768px the sidebar collapses to a **bottom tab bar**
+  (Bills / Analysis / Goals / Me); theme toggle and sign-out move into the **Me**
+  account page since there is no sidebar footer on mobile.
 
 ### 6.3 Top Header Bar
 
@@ -180,8 +207,9 @@ Based on an **8px grid**, with 4px and 12px fine-tuning:
   - 12:00–17:59 → Good Afternoon
   - 18:00–04:59 → Good Evening
   - Date format: `3rd April, 2026`
-- Right: **Month Picker** (the sole global filter control)
-- **Not included**: ~~Search~~, ~~Avatar~~, ~~Notifications~~, ~~Login/Sign-up~~
+- Right: **Month Picker** (the global month filter)
+- Live **search** is present on the Bills and Goals pages (filters as you type).
+  Auth (Login/Register) is a dedicated pre-app screen in 2.0, not in the header.
 
 ### 6.4 Month Picker
 

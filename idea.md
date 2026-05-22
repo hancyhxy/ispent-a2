@@ -1,6 +1,8 @@
-# iSpent
+# iSpent 2.0
 
-> A modern, casual-feeling finance tracker that turns daily bookkeeping into an effortless habit — youthful and approachable on the surface, structured and data-precise underneath.
+> A modern, **goal-driven** finance tracker that turns daily bookkeeping into an effortless habit — youthful and approachable on the surface, structured and data-precise underneath. Every transaction you log visibly moves you toward a savings target, a spending limit, or a financial to-do.
+
+> **iSpent 2.0** evolves the Assignment 1 single-user ledger into a multi-user, goal-driven platform: authentication (JWT + hashed passwords), a goal board with three card types, an admin role with a cross-user audit log, live search, and a full light/dark theme. See [`README.md`](./README.md#from-a1-to-20--what-changed) for the A1 → 2.0 delta.
 
 ---
 
@@ -14,7 +16,9 @@ International students and young working professionals who need a fast, intuitiv
 
 ## Solution
 
-iSpent is a single-page web application that combines quick transaction logging, visual spending analysis, and category-based budget tracking in a modern, approachable interface. No accounts, no clutter — just open and start tracking.
+iSpent is a multi-user single-page web application that combines quick transaction logging, visual spending analysis, and a **goal-driven board** in a modern, approachable interface. Each account's data is private (per-user isolation behind JWT auth), and an admin role can manage all accounts and review a cross-user activity log.
+
+The product thesis matured from A1 to 2.0: A1 answered *"how much did I spend?"*; 2.0 answers *"am I moving toward what I set out to do?"* — every record feeds a Goal card, so the user always sees forward momentum, not just a static balance.
 
 ### Design Highlight — Quick Notes (Tag System)
 
@@ -31,9 +35,16 @@ A key innovation that speeds up daily expense entry: each category comes with bu
 
 | Page | Purpose |
 |------|---------|
-| **Bills** | Log income and expenses, view transaction history grouped by date |
+| **Login / Register** | Email-first auth — JWT, bcrypt-hashed passwords, per-user data isolation |
+| **Bills** | Log income and expenses, view transaction history grouped by date; live search |
 | **Analysis** | Visualize spending breakdown (donut chart), daily trends (bar chart), and monthly summary |
-| **Goals** | Set monthly budgets per category, track progress with color-coded progress bars |
+| **Goals** | Three card types — **savings target**, **spending limit** (auto-tracks a category against a cap), and **simple to-do**; every record moves the matching goal forward |
+| **Admin** (admin only) | Manage all accounts (roles, delete) and review a cross-user activity log drawn from the `user_activity` entity |
+| **Me / Account** | Profile, light/dark theme toggle (persisted), sign out |
+
+### The four conceptual entities (CRUD)
+
+2.0 applies full CRUD across **four** entities — `user`, `record`, `goal`, and `user_activity` — exceeding the assignment's "at least three entities" requirement.
 
 ---
 
@@ -45,7 +56,9 @@ A key innovation that speeds up daily expense entry: each category comes with bu
 | Styling | Tailwind CSS | Utility-first, rapid UI development |
 | Charts | Recharts | React-native charting, donut + bar charts |
 | Backend | Node.js + Express | Unified JS stack front-to-back |
-| Database | MongoDB | Flexible schema, JSON-friendly |
+| Database | MongoDB + Mongoose | Flexible schema, JSON-friendly |
+| Auth | JWT + bcrypt | Stateless token auth, hashed passwords |
+| Theming | CSS custom properties | One-tap light/dark, persisted, no flash |
 
 ---
 
@@ -133,6 +146,6 @@ This project integrates all core topics from Week 1 through Week 7:
 
 | Document | Purpose |
 |----------|---------|
-| [`design-system.md`](./design-system.md) | Visual design specification: colors, typography, spacing, layout, components |
+| [`README.md`](./README.md) | Project overview, A1 → 2.0 changes, how to run, folder structure |
+| [`design-system.md`](./design-system.md) | Visual design specification: colors, typography, spacing, layout, components, dark theme |
 | [`feature-spec.md`](./feature-spec.md) | Feature specification: complete CRUD flows, API endpoints, data models, edge cases |
-| [`rubric.md`](./rubric.md) | Assignment grading criteria |

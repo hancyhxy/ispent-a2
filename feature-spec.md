@@ -1,4 +1,4 @@
-# iSpent — Feature Specification
+# iSpent 2.0 — Feature Specification
 
 > Complete feature definitions for all three pages, covering every CRUD state, interaction flow, and edge case.
 
@@ -334,15 +334,34 @@ Opens an Edit Modal (reuses the Create Modal structure):
 
 ---
 
-## 3. Goals (Budget)
+## 3. Goals
 
-### 3.1 Budget List
+> **2.0 change:** A1's "Budget" was a single concept — a flat monthly cap per
+> category. 2.0 generalises it into a **Goal** entity with **three card types**:
+
+| Type | Meaning | Progress source |
+|------|---------|-----------------|
+| `savings` | Save toward a target by a deadline (e.g., *Japan Trip — $5,000*) | `currentAmount` (manual "Add to this goal" contributions) |
+| `spending_limit` | Keep a category's monthly spend under a cap (e.g., *Eating Out — $400/mo*) | auto-aggregated from matching `food` records (the A1 "budget" logic below) |
+| `simple_todo` | A financial task to check off (e.g., *Research one ETF*) | a boolean `done` flag |
+
+> Every record the user logs moves the matching `spending_limit` goal forward
+> automatically — this is the "every entry moves a goal" core loop. Goal cards
+> support a filter-pill bar (All / Savings / Limits / To-do / Achieved) and live
+> search. Goal **data model**: `{ userId, type, title, icon, category,
+> targetAmount, currentAmount, deadline, limitCategory, period, done, status }`.
+
+The sections below detail the `spending_limit` card (which inherits A1's budget
+logic); `savings` and `simple_todo` cards reuse the same CRUD endpoints with
+type-specific fields.
+
+### 3.1 Spending-Limit Card
 
 #### 3.1.1 Card Display
 
-One card per category budget:
+One card per spending-limit goal:
 - Left: category icon (emoji) + category name
-- Right: spent amount / budget amount (e.g., "$320 / $500") + percentage
+- Right: spent amount / cap amount (e.g., "$320 / $500") + percentage
 - Below: progress bar
 
 #### 3.1.2 Progress Bar Color Logic
@@ -465,12 +484,16 @@ Opens an Edit Modal:
 
 ## 4. CRUD Coverage Overview
 
-| Operation | Bills | Analysis | Goals |
-|-----------|-------|----------|-------|
-| Create | Add a record (Modal) | — | Create a budget (Modal) |
-| Read | Record list + summary | All charts and cards | Budget progress list |
-| Update | Edit record (Modal) | — | Edit budget amount (Modal) |
-| Delete | Delete record (confirmation) | — | Delete budget (confirmation) |
+2.0 applies full CRUD across **four** conceptual entities — `user`, `record`,
+`goal`, and `user_activity` (see §7–8) — exceeding the "at least three entities"
+requirement.
+
+| Operation | Record | Goal | User (Admin) | user_activity |
+|-----------|--------|------|--------------|---------------|
+| Create | Add a record (Modal) | Create a goal (Modal) | Register account | Auto-logged on every action |
+| Read | Record list + summary | Goal board + Analysis | Admin user table | Admin activity log (filterable) |
+| Update | Edit record (Modal) | Edit / contribute / toggle | Change role | — (append-only) |
+| Delete | Delete record (confirm) | Delete goal (confirm) | Delete user (cascade) | Cascades with the user |
 
 ---
 
@@ -533,13 +556,24 @@ frontend/
 backend/
 ├── server.js                # Express app entry, middleware, CORS
 ├── db.js                    # MongoDB connection (Mongoose)
+├── middleware/
+│   └── auth.js              # requireAuth (JWT verify) + requireAdmin (role gate)
 ├── routes/
+│   ├── auth.js              # /api/auth — register / login / logout / me (2.0)
 │   ├── records.js           # /api/records CRUD
+│   ├── goals.js             # /api/goals CRUD — savings / spending_limit / to-do (2.0)
 │   ├── budgets.js           # /api/budgets CRUD
-│   └── stats.js             # /api/stats/* read-only aggregations
+│   ├── stats.js             # /api/stats/* read-only aggregations
+│   └── admin.js             # /api/admin — users + activity log, admin-only (2.0)
 ├── models/
-│   ├── Record.js            # Mongoose schema for records
-│   └── Budget.js            # Mongoose schema for budgets
+│   ├── User.js              # Account schema, role: user | admin (2.0)
+│   ├── Record.js            # Transaction schema (scoped by userId)
+│   ├── Goal.js              # Goal schema — savings / spending_limit / simple_todo (2.0)
+│   ├── Budget.js            # Budget schema
+│   └── UserActivity.js      # Audit-log schema + logActivity() helper (2.0)
+├── data/
+│   └── sample-data.json     # Database export (seedable sample data)
+├── seed.js                  # Seeds demo + admin accounts and sample data
 └── package.json
 ```
 
@@ -559,3 +593,76 @@ With appropriate HTTP status codes: `400` (validation), `404` (not found), `409`
 - On success: return parsed data
 - On failure: throw error with message from response body
 - Components catch errors and display via Toast (never a blank screen)
+
+---
+
+## 7. Authentication (2.0)
+
+iSpent 2.0 is multi-user; every business route is scoped to the logged-in user.
+
+### 7.1 Flow — email-first
+
+1. **Email step** — user enters an email and taps **Continue**. The server
+   checks whether the account exists.
+2. **Password step** — existing account → "Welcome back" + password; new email →
+   register (set a password). One screen, branch on existence.
+
+### 7.2 Security
+
+- Passwords hashed with **bcrypt** (cost 10); plaintext never stored or returned.
+- On success the server issues a **JWT** (signed with a server-side secret from
+  `.env`); the client stores it and sends it as `Authorization: Bearer <token>`.
+- Middleware `requireAuth` verifies the token and attaches `req.userId`. Every
+  record/goal query is filtered by `userId` (IDOR-safe — a user can never read
+  another user's data).
+
+### 7.3 API Endpoints
+
+| Method | Endpoint | Purpose |
+|--------|----------|---------|
+| POST | `/api/auth/check-email` | Does this email already have an account? |
+| POST | `/api/auth/register` | Create account, hash password, return JWT |
+| POST | `/api/auth/login` | Verify password, return JWT |
+| POST | `/api/auth/logout` | Record a logout activity (token is client-discarded) |
+| GET | `/api/auth/me` | Return the current user from the token |
+
+### 7.4 Data Model — `user`
+
+`{ _id, email (unique), password (bcrypt hash), name, role: "user" | "admin", createdAt }`
+
+---
+
+## 8. Admin & Activity Log (2.0)
+
+The `user_activity` entity is iSpent 2.0's **fourth** CRUD entity and the basis
+of the admin dashboard. The Admin tab is visible only to `role: "admin"` and
+every endpoint is guarded server-side by `requireAdmin` (frontend hiding is a UX
+nicety only).
+
+### 8.1 User Management
+
+- A table of all accounts: name, email, role, activity count.
+- Admin can **change a role** (user ↔ admin) and **delete a user** (cascade-
+  deletes that user's records, goals, budgets, and activity).
+- **Self-protection**: an admin cannot delete or demote their own account
+  (enforced both client- and server-side), so the system can't be locked out.
+
+### 8.2 Activity Log (the `user_activity` entity)
+
+- An append-only feed of `login`, `logout`, `create`, `update`, `delete` events
+  across all users, written automatically by a `logActivity()` helper whenever a
+  CRUD action or auth event occurs.
+- Filterable by user. Each row: timestamp, user email, action, entity, detail.
+
+### 8.3 API Endpoints (all behind `requireAuth` + `requireAdmin`)
+
+| Method | Endpoint | Purpose |
+|--------|----------|---------|
+| GET | `/api/admin/users` | List all accounts + activity counts |
+| PATCH | `/api/admin/users/:id/role` | Change a user's role |
+| DELETE | `/api/admin/users/:id` | Delete a user and cascade their data |
+| GET | `/api/admin/activity` | Activity log, optionally `?userId=` filtered |
+
+### 8.4 Data Model — `user_activity`
+
+`{ _id, userId, userEmail, action, entity, detail, createdAt }`
