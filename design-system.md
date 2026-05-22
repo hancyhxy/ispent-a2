@@ -19,7 +19,7 @@
 
 | Token | Value | Usage |
 |-------|-------|-------|
-| `primary` | `#4B6EF5` (Modern Blue) | Brand color, primary buttons, active nav state |
+| `primary` | `#4F46E5` (Indigo) | Brand color, primary buttons, active nav state. *(2.0 deepened it from A1's `#4B6EF5` to a truer indigo.)* |
 | `secondary` | `#FFD147` (Gold Yellow) | Emphasis, salary/income-related categories |
 | `tertiary` | `#9333EA` (Deep Purple) | Accent, non-core expenses or special categories |
 
@@ -55,7 +55,7 @@
 
 ### 2.6 Gradients & Frosted Glass
 
-- **CTA buttons**: Subtle linear gradient from `primary` (`#4B6EF5`) to a slightly lighter blue
+- **CTA buttons**: Subtle linear gradient from `primary` (`#4F46E5`) to a slightly lighter indigo (`#6366F1`)
 - **Floating elements**: `#FFFFFF` at 80% opacity + `backdrop-blur: 20px` frosted glass effect (for Modal overlays, Tooltips)
 
 ### 2.7 Dark Theme (2.0)
@@ -148,13 +148,17 @@ Based on an **8px grid**, with 4px and 12px fine-tuning:
 
 ### Border Radius
 
+A tokenised **16 / 24 / 32 px** radius scale (2.0):
+
 | Component | Radius |
 |-----------|--------|
-| Main cards / large containers | 24px |
-| Buttons, inputs, small components | 16px |
-| Pill (full round) | 9999px (search bar, tags) |
+| Large containers / sheets | 32px (`--radius-lg`) |
+| Main cards | 24px (`--radius-card`) |
+| Buttons, inputs, small components | 16px (`--radius-sm`) |
+| Pill (full round) | 9999px (search bar, filter pills, tags) |
 
-**Minimum radius: 8px. No sharp corners.**
+**Minimum radius: 16px. "Round everything — no sharp corners."** This bigger,
+softer corner scale is a defining part of the 2.0 youthful design language.
 
 ### Shadows
 
