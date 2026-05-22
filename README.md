@@ -228,9 +228,9 @@ ispent-a2/
 
 ## Workload Allocation
 
-This assignment was originally registered as a two-person group (Xinyi Han and a teammate). It was subsequently **approved for individual submission** by the subject coordinator (confirmed by Xianzhi Wang via email, 15 May 2026). As an approved individual submission, the group component is assessed as an individual component per the assignment specification.
+**This is an individual submission. Xinyi Han is the only student working on this project** — all source code, design, documentation, and the demo recording were produced solely by Xinyi Han, with no other contributors. (Per the subject coordinator, an individual submission needs no extra steps beyond stating this clearly.) The group component is therefore assessed as an individual component per the assignment specification.
 
-**All source code, design, documentation, and the demo recording were written solely by Xinyi Han.** Authorship is traceable through the Git commit history (incremental, meaningfully-messaged commits throughout — not a single bulk upload) and via `/* Author: Xinyi */` header comments on the entity files added for Assignment 2.
+Authorship is traceable through the Git commit history (incremental, meaningfully-messaged commits throughout — not a single bulk upload) and via `/* Author: Xinyi */` header comments on the entity files.
 
 | Area | Author |
 |------|--------|
