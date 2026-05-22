@@ -43,6 +43,32 @@ Assignment 1's iSpent was a single-user expense ledger. Version 2.0 re-architect
 
 > The product thesis also matured: A1 answered *"how much did I spend?"*; 2.0 answers *"am I moving toward what I set out to do?"* — the goal board turns logging from a chore into visible progress.
 
+The headline 2.0 additions, in pictures:
+
+**🛡️ Admin dashboard & audit log** — a role-gated dashboard (server-enforced via `requireAdmin`) to manage every account and review a cross-user activity feed drawn from the new `user_activity` entity.
+
+<p align="center">
+  <img src="screenshots/admin.png" alt="Admin dashboard — user management and activity log" width="90%" />
+</p>
+
+**🌙 Light + dark theme** — one tap re-skins the whole app via semantic CSS variables; the choice is persisted and applied before first paint (no flash).
+
+<p align="center">
+  <img src="screenshots/account_mobile.png" alt="Account — light mode" height="380" />
+  &nbsp;&nbsp;
+  <img src="screenshots/account_dark_mobile.png" alt="Account — dark mode" height="380" />
+</p>
+
+**🧭 Guided onboarding** — a first-run spotlight walkthrough introduces the app in six steps, reopenable anytime from the "?" help button.
+
+<p align="center">
+  <img src="screenshots/onboarding-welcome.png" alt="Onboarding — welcome card" width="45%" />
+  &nbsp;&nbsp;
+  <img src="screenshots/onboarding-spotlight.png" alt="Onboarding — spotlight on Bills" width="45%" />
+</p>
+
+> See **[SCREENSHOTS.md](SCREENSHOTS.md)** for the full responsive gallery (every view on desktop and mobile).
+
 ## Tech Stack
 
 | Layer | Technology | Purpose |
