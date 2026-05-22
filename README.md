@@ -13,6 +13,10 @@ A modern, single-page finance tracker that turns daily bookkeeping into an effor
 </p>
 
 <p align="center">
+  <a href="https://youtu.be/JR8B7USEm0w">
+    <img src="https://img.youtube.com/vi/JR8B7USEm0w/hqdefault.jpg" alt="Watch the iSpent 2.0 demo on YouTube" width="60%" />
+  </a>
+  <br />
   <a href="https://youtu.be/JR8B7USEm0w"><strong>▶ Watch the demo on YouTube</strong></a>
 </p>
 
