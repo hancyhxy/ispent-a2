@@ -40,10 +40,17 @@ Assignment 1's iSpent was a single-user expense ledger. Version 2.0 re-architect
 | Auditability | — | **`user_activity`** entity: append-only log of logins, logouts, and every CRUD action |
 | Entities under CRUD | 2 | **4** (user / record / goal / user_activity) |
 | Interface | Light only | **Light + dark theme**, persisted, with a responsive Me/account area |
+| Design language | Ad-hoc card styling | **Systematised, youthful design language** — a tokenised radius scale (16 / 24 / 32 px), a "round everything, no sharp corners" rule, emoji category icons, and generous whitespace, applied consistently across both themes |
 
 > The product thesis also matured: A1 answered *"how much did I spend?"*; 2.0 answers *"am I moving toward what I set out to do?"* — the goal board turns logging from a chore into visible progress.
 
 The headline 2.0 additions, in pictures:
+
+**🎨 A refreshed, youthful design language** — 2.0 replaces A1's ad-hoc card styling with a deliberate visual system: large, soft corners everywhere (a tokenised 16 / 24 / 32 px radius scale, *"no sharp corners"*), emoji-led category icons, borderless depth, and generous whitespace — turning a traditionally heavy financial task into something light and approachable, while the same language carries cleanly into dark mode.
+
+<p align="center">
+  <img src="screenshots/bills.png" alt="iSpent 2.0 — rounded, card-based design language" width="90%" />
+</p>
 
 **🛡️ Admin dashboard & audit log** — a role-gated dashboard (server-enforced via `requireAdmin`) to manage every account and review a cross-user activity feed drawn from the new `user_activity` entity.
 
